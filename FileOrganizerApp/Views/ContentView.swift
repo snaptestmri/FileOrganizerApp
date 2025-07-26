@@ -8,7 +8,7 @@ struct ContentView: View {
         NavigationView {
             List {
                 NavigationLink("Run Organizer") {
-                    FileMoverView()
+                    FolderSelectionView()
                 }
                 NavigationLink("Manage Keywords") {
                     KeywordManagerView()

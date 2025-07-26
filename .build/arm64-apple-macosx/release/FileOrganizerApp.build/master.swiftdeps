@@ -1,0 +1,17 @@
+version: "Apple Swift version 6.1.2 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)"
+options: "c37eba6e30a88fe3ecdb9dca4e5799778234a7b8413f61f18a9ce44d1f053b5e"
+build_start_time: [1753514184, 27434000]
+build_end_time: [1753514186, 947289000]
+inputs:
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/FileOrganizerApp.swift": [1753513504, 180094914]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/FileMover.swift": [1753513777, 400028124]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordEntry.swift": [1753512846, 875033345]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordStore.swift": [1753536834, 0]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/iCloudFileManager.swift": [1753512860, 91998808]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/ContentView.swift": [1753514018, 945905238]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/DuplicateCheckerView.swift": [1753512866, 663221424]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FileMoverView.swift": [1753513797, 960262000]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderSelectionView.swift": [1753514178, 126092089]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/KeywordManagerView.swift": [1753536834, 0]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/OrganizationProgressView.swift": [1753514149, 167210859]
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/iCloudFileBrowserView.swift": [1753512883, 490676023]

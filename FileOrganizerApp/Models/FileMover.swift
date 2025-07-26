@@ -38,6 +38,82 @@ struct FileMover {
             try? FileManager.default.moveItem(at: item, to: destination)
         }
     }
+    
+    func runWithProgress(with keywords: [KeywordEntry], progressCallback: @escaping (Int, Int, String) -> Void) throws -> FileMoveResults {
+        let startTime = Date()
+        
+        // Get all files in the source folder
+        let contents = try FileManager.default.contentsOfDirectory(
+            at: sourceFolder, 
+            includingPropertiesForKeys: [.isRegularFileKey], 
+            options: [.skipsHiddenFiles]
+        )
+        
+        let files = contents.filter { url in
+            let resourceValues = try? url.resourceValues(forKeys: [.isRegularFileKey])
+            return resourceValues?.isRegularFile == true
+        }
+        
+        // Only count files with a matching keyword as 'to process'
+        let filesToProcess = files.filter { file in
+            let lowerName = file.lastPathComponent.lowercased()
+            return keywords.contains { keyword in lowerName.contains(keyword.keyword.lowercased()) }
+        }
+        let totalFiles = filesToProcess.count
+        var processedFiles = 0
+        var movedFiles = 0
+        var skippedFiles = 0
+        var errorFiles = 0
+        
+        for file in files {
+            let currentFileName = file.lastPathComponent
+            let lowerName = currentFileName.lowercased()
+            guard let matchedKeyword = keywords.first(where: { lowerName.contains($0.keyword.lowercased()) }) else {
+                skippedFiles += 1
+                continue
+            }
+            processedFiles += 1
+            progressCallback(processedFiles, totalFiles, currentFileName)
+            do {
+                // Create target folder structure
+                let targetFolder = baseTargetFolder
+                    .appendingPathComponent(matchedKeyword.category)
+                    .appendingPathComponent(matchedKeyword.subfolder)
+                try FileManager.default.createDirectory(
+                    at: targetFolder, 
+                    withIntermediateDirectories: true
+                )
+                // Handle file name conflicts
+                var destination = targetFolder.appendingPathComponent(currentFileName)
+                if FileManager.default.fileExists(atPath: destination.path) {
+                    let timestamp = ISO8601DateFormatter().string(from: Date())
+                        .replacingOccurrences(of: ":", with: "-")
+                        .replacingOccurrences(of: ".", with: "-")
+                    let nameWithoutExtension = currentFileName.replacingOccurrences(of: ".\(currentFileName.components(separatedBy: ".").last ?? "")", with: "")
+                    let fileExtension = currentFileName.components(separatedBy: ".").last ?? ""
+                    destination = targetFolder.appendingPathComponent("\(nameWithoutExtension)_\(timestamp).\(fileExtension)")
+                }
+                // Move the file
+                try FileManager.default.moveItem(at: file, to: destination)
+                movedFiles += 1
+            } catch {
+                errorFiles += 1
+                print("Error processing file \(currentFileName): \(error.localizedDescription)")
+            }
+        }
+        
+        let endTime = Date()
+        let timeInterval = endTime.timeIntervalSince(startTime)
+        let timeTaken = formatTimeInterval(timeInterval)
+        
+        return FileMoveResults(
+            processedFiles: processedFiles,
+            movedFiles: movedFiles,
+            skippedFiles: skippedFiles,
+            errorFiles: errorFiles,
+            timeTaken: timeTaken
+        )
+    }
 
     static func chooseSourceFolder() -> URL? {
         let dialog = NSOpenPanel()
@@ -45,5 +121,17 @@ struct FileMover {
         dialog.canChooseFiles = false
         dialog.allowsMultipleSelection = false
         return dialog.runModal() == .OK ? dialog.url : nil
+    }
+    
+    private func formatTimeInterval(_ interval: TimeInterval) -> String {
+        if interval < 1 {
+            return String(format: "%.0f ms", interval * 1000)
+        } else if interval < 60 {
+            return String(format: "%.1f seconds", interval)
+        } else {
+            let minutes = Int(interval) / 60
+            let seconds = Int(interval) % 60
+            return "\(minutes)m \(seconds)s"
+        }
     }
 }

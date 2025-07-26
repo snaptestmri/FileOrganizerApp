@@ -15,7 +15,11 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "FileOrganizerApp",
-            path: "FileOrganizerApp"
+            path: "FileOrganizerApp",
+            exclude: ["Info.plist"],
+            swiftSettings: [
+                .unsafeFlags(["-framework", "AppKit", "-framework", "SwiftUI"])
+            ]
         )
     ]
 ) 
