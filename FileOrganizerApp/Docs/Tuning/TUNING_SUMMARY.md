@@ -179,9 +179,14 @@ Better Model                        91.50%        512ms           5
 
 **Solution:**
 ```swift
-let classifier = OllamaClassifier(
-    useExamples: true,        // Enable examples
-    model: "mistral:7b"      // Use better model
+let llmService = OllamaLLMService(model: "mistral:7b")
+let promptBuilder = ClassificationPromptBuilder()
+promptBuilder.useExamples = true  // Enable examples
+let manager = FileClassificationManager(
+    llmService: llmService,
+    telemetryService: TelemetryService.shared,
+    fallbackClassifier: FallbackClassifier(),
+    promptBuilder: promptBuilder
 )
 ```
 
@@ -189,9 +194,14 @@ let classifier = OllamaClassifier(
 
 **Solution:**
 ```swift
-let classifier = OllamaClassifier(
-    temperature: 0.1,        // Lower = more consistent
-    useExamples: true
+let llmService = OllamaLLMService(temperature: 0.1)  // Lower = more consistent
+let promptBuilder = ClassificationPromptBuilder()
+promptBuilder.useExamples = true
+let manager = FileClassificationManager(
+    llmService: llmService,
+    telemetryService: TelemetryService.shared,
+    fallbackClassifier: FallbackClassifier(),
+    promptBuilder: promptBuilder
 )
 ```
 
@@ -199,9 +209,14 @@ let classifier = OllamaClassifier(
 
 **Solution:**
 ```swift
-let classifier = OllamaClassifier(
-    model: "llama3.2:1b",    // Smaller = faster
-    useExamples: false       // Disable examples
+let llmService = OllamaLLMService(model: "llama3.2:1b")  // Smaller = faster
+let promptBuilder = ClassificationPromptBuilder()
+promptBuilder.useExamples = false  // Disable examples
+let manager = FileClassificationManager(
+    llmService: llmService,
+    telemetryService: TelemetryService.shared,
+    fallbackClassifier: FallbackClassifier(),
+    promptBuilder: promptBuilder
 )
 ```
 
@@ -209,10 +224,17 @@ let classifier = OllamaClassifier(
 
 **Solution:**
 ```swift
-let classifier = OllamaClassifier(
+let llmService = OllamaLLMService(
     model: "mistral:7b",     // Better model
-    temperature: 0.1,        // More consistent
-    useExamples: true        // Better accuracy
+    temperature: 0.1         // More consistent
+)
+let promptBuilder = ClassificationPromptBuilder()
+promptBuilder.useExamples = true  // Better accuracy
+let manager = FileClassificationManager(
+    llmService: llmService,
+    telemetryService: TelemetryService.shared,
+    fallbackClassifier: FallbackClassifier(),
+    promptBuilder: promptBuilder
 )
 ```
 

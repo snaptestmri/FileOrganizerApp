@@ -525,27 +525,22 @@ func classifyBatch(metadata: [FileMetadata]) async throws -> [ClassificationResu
 
 **Cache Similar Files:**
 
+Note: Caching is now handled by `FileClassificationManager`. For custom caching, you can extend the manager or implement caching at the application level:
+
 ```swift
-class OllamaClassifier: LLMClassifier {
-    private var cache: [String: ClassificationResult] = [:]
+// Application-level caching
+var classificationCache: [String: ClassificationResult] = [:]
+
+func classifyWithCache(metadata: FileMetadata, manager: FileClassificationManager) async -> ClassificationResult {
+    let cacheKey = "\(metadata.fileExtension)_\(extractPattern(from: metadata.fileName))"
     
-    func classify(metadata: FileMetadata) async throws -> ClassificationResult {
-        // Create cache key from filename pattern
-        let cacheKey = createCacheKey(from: metadata)
-        
-        if let cached = cache[cacheKey] {
-            return cached
-        }
-        
-        let result = try await performClassification(metadata: metadata)
-        cache[cacheKey] = result
-        return result
+    if let cached = classificationCache[cacheKey] {
+        return cached
     }
     
-    private func createCacheKey(from metadata: FileMetadata) -> String {
-        // Use extension + filename pattern
-        return "\(metadata.fileExtension)_\(extractPattern(from: metadata.fileName))"
-    }
+    let result = await manager.classifyFile(metadata)
+    classificationCache[cacheKey] = result
+    return result
 }
 ```
 
@@ -560,7 +555,13 @@ Quantized models are smaller and faster:
 ollama pull llama3.2:1b-instruct-q4_K_M
 
 # Use in code
-let classifier = OllamaClassifier(model: "llama3.2:1b-instruct-q4_K_M")
+let llmService = OllamaLLMService(model: "llama3.2:3b-instruct-q4_K_M")
+let manager = FileClassificationManager(
+    llmService: llmService,
+    telemetryService: TelemetryService.shared,
+    fallbackClassifier: FallbackClassifier(),
+    promptBuilder: ClassificationPromptBuilder()
+)
 ```
 
 **Quantization Levels:**
