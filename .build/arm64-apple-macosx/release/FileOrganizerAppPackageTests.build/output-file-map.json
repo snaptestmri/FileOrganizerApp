@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.build/FileOrganizerAppPackageTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.build/FileOrganizerAppPackageTests.o",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.build/master.swiftdeps"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.derived/runner.swift": {
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/release/FileOrganizerAppPackageTests.build/runner.dia"
+  }
+}

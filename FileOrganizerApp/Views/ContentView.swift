@@ -8,7 +8,10 @@ struct ContentView: View {
         NavigationView {
             List {
                 NavigationLink("Run Organizer") {
-                    FolderSelectionView()
+                    FolderSelectionView(defaultMode: .keywords)
+                }
+                NavigationLink("AI Classification") {
+                    FolderSelectionView(defaultMode: .ai)
                 }
                 NavigationLink("Manage Keywords") {
                     KeywordManagerView()
@@ -20,7 +23,20 @@ struct ContentView: View {
                     iCloudFileBrowserView()
                 }
             }
+            .listStyle(SidebarListStyle())
+            .frame(minWidth: 150)
             .navigationTitle("File Organizer")
+
+            // Default view when nothing is selected
+            VStack {
+                Image(systemName: "folder.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.secondary)
+                Text("Select an option from the sidebar")
+                    .font(.title3)
+                    .foregroundColor(.secondary)
+            }
         }
+        .frame(minWidth: 400, minHeight: 500)
     }
 }

@@ -4,18 +4,14 @@ import AppKit
 struct FolderSelectionView: View {
     @State private var selectedFolderPath = ""
     @State private var showOrganizer = false
+    @State private var showAIClassifier = false
     @State private var showError = false
     @State private var errorMessage = ""
+    @State private var organizationMode: OrganizationMode = .keywords
+    var defaultMode: OrganizationMode = .keywords
     
     var body: some View {
-        Group {
-            if showOrganizer {
-                OrganizationProgressView(folderPath: selectedFolderPath)
-                    .onDisappear {
-                        showOrganizer = false
-                    }
-            } else {
-                VStack(spacing: 30) {
+        VStack(spacing: 30) {
             // Header
             VStack(spacing: 8) {
                 Text("Choose Folder to Organize")
@@ -100,44 +96,78 @@ struct FolderSelectionView: View {
             
             Spacer()
             
+            // Organization Mode Selection
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Organization Method")
+                    .font(.headline)
+                
+                Picker("Method", selection: $organizationMode) {
+                    Text("Keyword-Based").tag(OrganizationMode.keywords)
+                    Text("AI Classification").tag(OrganizationMode.ai)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                
+                Text(organizationMode == .keywords ? 
+                     "Uses your keyword rules to organize files" :
+                     "Uses AI to intelligently classify and organize files")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.horizontal, 40)
+            .onAppear {
+                organizationMode = defaultMode
+            }
+            
             // Action Buttons
             VStack(spacing: 16) {
                 // Run Organizer Button
                 Button(action: runOrganizer) {
                     HStack {
-                        Image(systemName: "play.fill")
-                        Text("Run File Organizer")
+                        Image(systemName: organizationMode == .ai ? "sparkles" : "play.fill")
+                        Text(organizationMode == .ai ? "Run AI Classification" : "Run File Organizer")
                     }
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(selectedFolderPath.isEmpty ? Color.gray : Color.green)
+                    .background(selectedFolderPath.isEmpty ? Color.gray : (organizationMode == .ai ? Color.purple : Color.green))
                     .cornerRadius(10)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .disabled(selectedFolderPath.isEmpty)
-                
-                // Back Button
-                Button("Back to Main Menu") {
-                    // This would navigate back in a real app
-                }
-                .font(.subheadline)
-                .foregroundColor(.secondary)
             }
             .padding(.horizontal, 40)
             .padding(.bottom, 40)
-                }
-            }
         }
+        .frame(minWidth: 500, minHeight: 400)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
+        .sheet(isPresented: $showOrganizer) {
+            OrganizationProgressView(folderPath: selectedFolderPath)
+                .frame(minWidth: 500, minHeight: 600)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onDisappear {
+                    showOrganizer = false
+                }
+        }
+        .sheet(isPresented: $showAIClassifier) {
+            AIClassificationView(folderPath: selectedFolderPath)
+                .frame(minWidth: 500, minHeight: 600)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onDisappear {
+                    showAIClassifier = false
+                }
+        }
         .alert("Error", isPresented: $showError) {
             Button("OK") { }
         } message: {
             Text(errorMessage)
         }
     }
+    
+
+    
+
     
     private func selectFolder() {
         let dialog = NSOpenPanel()
@@ -158,12 +188,22 @@ struct FolderSelectionView: View {
             return
         }
         
-        print("Opening organizer for folder: \(selectedFolderPath)")
-        showOrganizer = true
+        if organizationMode == .ai {
+            print("Opening AI classifier for folder: \(selectedFolderPath)")
+            showAIClassifier = true
+        } else {
+            print("Opening organizer for folder: \(selectedFolderPath)")
+            showOrganizer = true
+        }
     }
     
     private func showError(message: String) {
         errorMessage = message
         showError = true
     }
+}
+
+enum OrganizationMode {
+    case keywords
+    case ai
 } 

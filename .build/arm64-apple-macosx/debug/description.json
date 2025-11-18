@@ -1,6 +1,10 @@
 {
   "builtTestProducts" : [
-
+    {
+      "binaryPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.xctest/Contents/MacOS/FileOrganizerAppPackageTests",
+      "packagePath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views",
+      "productName" : "FileOrganizerAppPackageTests"
+    }
   ],
   "copyCommands" : {
 
@@ -28,19 +32,83 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/FileMover.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Constants/ClassificationConstants.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordEntry.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/ClassificationResult.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordStore.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/FileMetadata.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/iCloudFileManager.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/KeywordEntry.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/ABTestingService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/AIClassifierMover.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/ClassificationPromptBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FallbackClassifier.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FileClassificationManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/FileMover.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/AnthropicLLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/LLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/MockLLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OllamaLLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OpenAILLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/TelemetryService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/iCloudFileManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Storage/KeywordStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/AIClassificationView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/BulkAddKeywordsView.swift"
         },
         {
           "kind" : "file",
@@ -52,11 +120,35 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/DuplicateScanProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/EnhancedKeywordManager.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FileMoverView.swift"
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderScanView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderSelectionView.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/KeywordManagerView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/OrganizationProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/ServiceOption.swift"
         },
         {
           "kind" : "file",
@@ -76,20 +168,44 @@
       "moduleOutputPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules/FileOrganizerApp.swiftmodule",
       "objects" : [
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileOrganizerApp.swift.o",
-        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMover.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationConstants.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationResult.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMetadata.swift.o",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordEntry.swift.o",
-        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordStore.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ABTestingService.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassifierMover.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationPromptBuilder.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FallbackClassifier.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileClassificationManager.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMover.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AnthropicLLMService.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/LLMService.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/MockLLMService.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OllamaLLMService.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OpenAILLMService.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/TelemetryService.swift.o",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/iCloudFileManager.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordStore.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassificationView.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/BulkAddKeywordsView.swift.o",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ContentView.swift.o",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/DuplicateCheckerView.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/DuplicateScanProgressView.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/EnhancedKeywordManager.swift.o",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMoverView.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderScanView.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderSelectionView.swift.o",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordManagerView.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OrganizationProgressView.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ServiceOption.swift.o",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/iCloudFileBrowserView.swift.o"
       ],
       "otherArguments" : [
         "-target",
         "arm64-apple-macosx14.0",
+        "-incremental",
         "-enable-batch-mode",
+        "-serialize-diagnostics",
         "-index-store-path",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/index/store",
         "-Onone",
@@ -97,6 +213,7 @@
         "-j8",
         "-DSWIFT_PACKAGE",
         "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
         "-module-cache-path",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/ModuleCache",
         "-parseable-output",
@@ -104,11 +221,16 @@
         "-entry-point-function-name",
         "-Xfrontend",
         "FileOrganizerApp_main",
-        "-color-diagnostics",
         "-swift-version",
         "5",
+        "-framework",
+        "AppKit",
+        "-framework",
+        "SwiftUI",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
         "-sdk",
-        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
         "-F",
         "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
         "-F",
@@ -121,7 +243,7 @@
         "-Xcc",
         "-isysroot",
         "-Xcc",
-        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
         "-Xcc",
         "-F",
         "-Xcc",
@@ -145,7 +267,15 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMover.swift.o"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationConstants.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationResult.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMetadata.swift.o"
         },
         {
           "kind" : "file",
@@ -153,11 +283,67 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordStore.swift.o"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ABTestingService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassifierMover.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationPromptBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FallbackClassifier.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileClassificationManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMover.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AnthropicLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/LLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/MockLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OllamaLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OpenAILLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/TelemetryService.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/iCloudFileManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassificationView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/BulkAddKeywordsView.swift.o"
         },
         {
           "kind" : "file",
@@ -169,11 +355,35 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/DuplicateScanProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/EnhancedKeywordManager.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMoverView.swift.o"
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderScanView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderSelectionView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordManagerView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OrganizationProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ServiceOption.swift.o"
         },
         {
           "kind" : "file",
@@ -187,17 +397,320 @@
       "prepareForIndexing" : false,
       "sources" : [
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/FileOrganizerApp.swift",
-        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/FileMover.swift",
-        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordEntry.swift",
-        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordStore.swift",
-        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/iCloudFileManager.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Constants/ClassificationConstants.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/ClassificationResult.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/FileMetadata.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/KeywordEntry.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/ABTestingService.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/AIClassifierMover.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/ClassificationPromptBuilder.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FallbackClassifier.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FileClassificationManager.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/FileMover.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/AnthropicLLMService.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/LLMService.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/MockLLMService.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OllamaLLMService.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OpenAILLMService.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/TelemetryService.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/iCloudFileManager.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Storage/KeywordStore.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/AIClassificationView.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/BulkAddKeywordsView.swift",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/ContentView.swift",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/DuplicateCheckerView.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/DuplicateScanProgressView.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/EnhancedKeywordManager.swift",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FileMoverView.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderScanView.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderSelectionView.swift",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/KeywordManagerView.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/OrganizationProgressView.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/ServiceOption.swift",
         "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/iCloudFileBrowserView.swift"
       ],
       "tempsPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.FileOrganizerAppPackageTests-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/sources",
+      "importPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules/FileOrganizerAppTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "FileOrganizerAppPackageTests",
+      "moduleOutputPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules/FileOrganizerAppPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j8",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/include/FileOrganizerAppPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "fileorganizerapp_rebuilt_final_with_all_views"
+      ],
+      "outputFileMapPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules/FileOrganizerAppPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.FileOrganizerAppTests-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/sources",
+      "importPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/ABTestingServiceTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/FileOrganizerAppTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/KeywordTextFieldTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/NewArchitectureTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/QuickTuningTestMinimal.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/TestUtilities.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/UIComponentTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "FileOrganizerAppTests",
+      "moduleOutputPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules/FileOrganizerAppTests.swiftmodule",
+      "objects" : [
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities.swift.o",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j8",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "fileorganizerapp_rebuilt_final_with_all_views"
+      ],
+      "outputFileMapPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules/FileOrganizerAppTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/ABTestingServiceTests.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationIntegrationTests.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationTests.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/FileOrganizerAppTests.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/KeywordTextFieldTests.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/NewArchitectureTests.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/QuickTuningTestMinimal.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/TestUtilities.swift",
+        "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/UIComponentTests.swift"
+      ],
+      "tempsPath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build",
       "wholeModuleOptimization" : false
     }
   },
@@ -211,23 +724,46 @@
       "FileOrganizerApp",
       "-package-name",
       "fileorganizerapp_rebuilt_final_with_all_views",
-      "-incremental",
       "-c",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/FileOrganizerApp.swift",
-      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/FileMover.swift",
-      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordEntry.swift",
-      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordStore.swift",
-      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/iCloudFileManager.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Constants/ClassificationConstants.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/ClassificationResult.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/FileMetadata.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/KeywordEntry.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/ABTestingService.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/AIClassifierMover.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/ClassificationPromptBuilder.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FallbackClassifier.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FileClassificationManager.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/FileMover.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/AnthropicLLMService.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/LLMService.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/MockLLMService.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OllamaLLMService.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OpenAILLMService.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/TelemetryService.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/iCloudFileManager.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Storage/KeywordStore.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/AIClassificationView.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/BulkAddKeywordsView.swift",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/ContentView.swift",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/DuplicateCheckerView.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/DuplicateScanProgressView.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/EnhancedKeywordManager.swift",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FileMoverView.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderScanView.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderSelectionView.swift",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/KeywordManagerView.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/OrganizationProgressView.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/ServiceOption.swift",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/iCloudFileBrowserView.swift",
       "-I",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules",
       "-target",
       "arm64-apple-macosx14.0",
+      "-incremental",
       "-enable-batch-mode",
+      "-serialize-diagnostics",
       "-index-store-path",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/index/store",
       "-Onone",
@@ -235,6 +771,7 @@
       "-j8",
       "-DSWIFT_PACKAGE",
       "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
       "-module-cache-path",
       "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/ModuleCache",
       "-parseable-output",
@@ -242,11 +779,16 @@
       "-entry-point-function-name",
       "-Xfrontend",
       "FileOrganizerApp_main",
-      "-color-diagnostics",
       "-swift-version",
       "5",
+      "-framework",
+      "AppKit",
+      "-framework",
+      "SwiftUI",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
       "-sdk",
-      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
       "-F",
       "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
       "-F",
@@ -259,7 +801,146 @@
       "-Xcc",
       "-isysroot",
       "-Xcc",
-      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "fileorganizerapp_rebuilt_final_with_all_views",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "FileOrganizerAppPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "FileOrganizerAppPackageTests",
+      "-package-name",
+      "fileorganizerapp_rebuilt_final_with_all_views",
+      "-c",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j8",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/include/FileOrganizerAppPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "fileorganizerapp_rebuilt_final_with_all_views",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "FileOrganizerAppTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "FileOrganizerAppTests",
+      "-package-name",
+      "fileorganizerapp_rebuilt_final_with_all_views",
+      "-c",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/ABTestingServiceTests.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationIntegrationTests.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationTests.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/FileOrganizerAppTests.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/KeywordTextFieldTests.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/NewArchitectureTests.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/QuickTuningTestMinimal.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/TestUtilities.swift",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/UIComponentTests.swift",
+      "-I",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j8",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
       "-Xcc",
       "-F",
       "-Xcc",
@@ -281,16 +962,35 @@
   "targetDependencyMap" : {
     "FileOrganizerApp" : [
 
+    ],
+    "FileOrganizerAppPackageTests" : [
+      "FileOrganizerAppTests",
+      "FileOrganizerApp"
+    ],
+    "FileOrganizerAppTests" : [
+      "FileOrganizerApp"
     ]
   },
   "testDiscoveryCommands" : {
 
   },
   "testEntryPointCommands" : {
+    "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.derived/runner.swift" : {
+      "inputs" : [
 
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.derived/runner.swift"
+        }
+      ]
+    }
   },
   "traitConfiguration" : {
-    "enableAllTraits" : false
+    "default" : {
+
+    }
   },
   "writeCommands" : {
     "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp-entitlement.plist" : {
@@ -320,19 +1020,83 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/FileMover.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Constants/ClassificationConstants.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordEntry.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/ClassificationResult.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/KeywordStore.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/FileMetadata.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/iCloudFileManager.swift"
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Core/KeywordEntry.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/ABTestingService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/AIClassifierMover.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/ClassificationPromptBuilder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FallbackClassifier.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/Classification/FileClassificationManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/FileMover.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/AnthropicLLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/LLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/MockLLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OllamaLLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/LLM/OpenAILLMService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/TelemetryService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Services/iCloudFileManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Models/Storage/KeywordStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/AIClassificationView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/BulkAddKeywordsView.swift"
         },
         {
           "kind" : "file",
@@ -344,11 +1108,35 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/DuplicateScanProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/EnhancedKeywordManager.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FileMoverView.swift"
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderScanView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/FolderSelectionView.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/KeywordManagerView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/OrganizationProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/FileOrganizerApp/Views/ServiceOption.swift"
         },
         {
           "kind" : "file",
@@ -366,11 +1154,63 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ABTestingService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassificationView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassifierMover.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AnthropicLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/BulkAddKeywordsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationConstants.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationPromptBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationResult.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ContentView.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/DuplicateCheckerView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/DuplicateScanProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/EnhancedKeywordManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FallbackClassifier.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileClassificationManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMetadata.swift.o"
         },
         {
           "kind" : "file",
@@ -386,6 +1226,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderScanView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderSelectionView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordEntry.swift.o"
         },
         {
@@ -398,6 +1246,34 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/LLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/MockLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OllamaLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OpenAILLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OrganizationProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ServiceOption.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/TelemetryService.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/iCloudFileBrowserView.swift.o"
         },
         {
@@ -406,6 +1282,244 @@
         }
       ],
       "outputFilePath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.product/Objects.LinkFileList"
+    },
+    "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/sources"
+    },
+    "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ABTestingService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassificationView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AIClassifierMover.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/AnthropicLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/BulkAddKeywordsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationConstants.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationPromptBuilder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ClassificationResult.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/DuplicateCheckerView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/DuplicateScanProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/EnhancedKeywordManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FallbackClassifier.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileClassificationManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMetadata.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMover.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileMoverView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FileOrganizerApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderScanView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/FolderSelectionView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordEntry.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordManagerView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/KeywordStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/LLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/MockLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OllamaLLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OpenAILLMService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/OrganizationProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/ServiceOption.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/TelemetryService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/iCloudFileBrowserView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerApp.build/iCloudFileManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/ABTestingServiceTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/FileOrganizerAppTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/KeywordTextFieldTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/NewArchitectureTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/QuickTuningTestMinimal.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/TestUtilities.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/UIComponentTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/sources"
     },
     "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
       "alwaysOutOfDate" : true,

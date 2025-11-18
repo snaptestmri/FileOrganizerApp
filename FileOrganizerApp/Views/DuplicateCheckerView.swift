@@ -3,45 +3,102 @@ import SwiftUI
 struct DuplicateCheckerView: View {
     @State private var selectedFolder = ""
     @State private var duplicates: [String: [URL]] = [:]
-    @State private var isScanning = false
+    @State private var showProgress = false
     
     var body: some View {
-        VStack {
-            HStack {
-                TextField("Select folder to scan", text: $selectedFolder)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                Button("Browse") {
-                    selectFolder()
-                }
-                
-                Button("Scan") {
-                    scanForDuplicates()
-                }
-                .disabled(selectedFolder.isEmpty || isScanning)
+        VStack(spacing: 30) {
+            // Header
+            VStack(spacing: 8) {
+                Text("Duplicate Checker")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                Text("Scan a folder for duplicate files by content hash.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
             }
-            .padding()
+            .padding(.top, 40)
             
-            if isScanning {
-                ProgressView("Scanning for duplicates...")
-                    .padding()
-            }
-            
-            List {
-                ForEach(Array(duplicates.keys.sorted()), id: \.self) { filename in
-                    VStack(alignment: .leading) {
-                        Text(filename)
-                            .font(.headline)
-                        ForEach(duplicates[filename] ?? [], id: \.self) { url in
-                            Text(url.path)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
+            // Folder Selection
+            VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Selected Folder")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    if selectedFolder.isEmpty {
+                        Text("No folder selected")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color(NSColor.controlBackgroundColor))
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                            )
+                    } else {
+                        Text(selectedFolder)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color(NSColor.controlBackgroundColor))
+                            .cornerRadius(8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                            )
                     }
                 }
+                Button(action: selectFolder) {
+                    HStack {
+                        Image(systemName: "folder")
+                        Text("Browse for Folder")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
+            .padding(.horizontal, 40)
+            
+            Spacer()
+            
+            // Action Button
+            VStack(spacing: 16) {
+                Button(action: { showProgress = true }) {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                        Text("Scan for Duplicates")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(selectedFolder.isEmpty ? Color.gray : Color.green)
+                    .cornerRadius(10)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .disabled(selectedFolder.isEmpty)
+            }
+            .padding(.horizontal, 40)
+            .padding(.bottom, 40)
         }
-        .navigationTitle("Duplicate Checker")
+        .frame(minWidth: 500, minHeight: 400)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(NSColor.windowBackgroundColor))
+        .sheet(isPresented: $showProgress) {
+            DuplicateScanProgressView(folderPath: selectedFolder) { found in
+                self.duplicates = found
+            }
+            .frame(minWidth: 500, minHeight: 600)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
     }
     
     private func selectFolder() {
@@ -49,46 +106,8 @@ struct DuplicateCheckerView: View {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
-        
         if panel.runModal() == .OK {
             selectedFolder = panel.url?.path ?? ""
-        }
-    }
-    
-    private func scanForDuplicates() {
-        guard !selectedFolder.isEmpty else { return }
-        
-        isScanning = true
-        duplicates.removeAll()
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            let fileManager = FileManager.default
-            let folderURL = URL(fileURLWithPath: selectedFolder)
-            
-            do {
-                let fileURLs = try fileManager.contentsOfDirectory(at: folderURL, includingPropertiesForKeys: [.contentModificationDateKey], options: [.skipsHiddenFiles])
-                
-                var fileHashes: [String: [URL]] = [:]
-                
-                for fileURL in fileURLs {
-                    if let data = try? Data(contentsOf: fileURL) {
-                        let hash = data.sha256()
-                        if fileHashes[hash] == nil {
-                            fileHashes[hash] = []
-                        }
-                        fileHashes[hash]?.append(fileURL)
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    self.duplicates = fileHashes.filter { $0.value.count > 1 }
-                    self.isScanning = false
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.isScanning = false
-                }
-            }
         }
     }
 }

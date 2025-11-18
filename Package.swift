@@ -20,6 +20,12 @@ let package = Package(
             swiftSettings: [
                 .unsafeFlags(["-framework", "AppKit", "-framework", "SwiftUI"])
             ]
+        ),
+        .testTarget(
+            name: "FileOrganizerAppTests",
+            dependencies: ["FileOrganizerApp"],
+            path: "Tests",
+            exclude: ["../Docs"]
         )
     ]
 ) 

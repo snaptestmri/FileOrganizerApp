@@ -1,0 +1,68 @@
+{
+  "": {
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/master.swiftdeps"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/ABTestingServiceTests.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/ABTestingServiceTests.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationIntegrationTests.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationIntegrationTests.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/AIClassificationTests.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/AIClassificationTests.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/FileOrganizerAppTests.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/FileOrganizerAppTests.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/KeywordTextFieldTests.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/KeywordTextFieldTests.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/NewArchitectureTests.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/NewArchitectureTests.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/QuickTuningTestMinimal.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/QuickTuningTestMinimal.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/TestUtilities.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/TestUtilities.dia"
+  },
+  "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/Tests/UIComponentTests.swift": {
+    "dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests.d",
+    "object": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests.swift.o",
+    "swiftmodule": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests.swiftdeps",
+    "diagnostics": "/Users/mthigale/FileOrganizerApp_Rebuilt_Final_With_All_Views/.build/arm64-apple-macosx/debug/FileOrganizerAppTests.build/UIComponentTests.dia"
+  }
+}

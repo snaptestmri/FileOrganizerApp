@@ -177,7 +177,6 @@ struct FileMoverView: View {
             Spacer()
         }
         .padding()
-        .navigationTitle("Run Organizer")
         .alert("Error", isPresented: $showError) {
             Button("OK") { }
         } message: {

@@ -1,38 +1,31 @@
 import SwiftUI
 
 struct KeywordManagerView: View {
-    @StateObject private var store = KeywordStore()
-    @State private var newKeyword = ""
-    @State private var newSubfolder = ""
-    @State private var selectedCategory = "Work"
-    let categories = ["Work", "Personal"]
-
     var body: some View {
-        Form {
-            Section("Add Keyword") {
-                TextField("Keyword", text: $newKeyword)
-                TextField("Subfolder", text: $newSubfolder)
-                Picker("Category", selection: $selectedCategory) {
-                    ForEach(categories, id: \.self) { Text($0) }
-                }
-                Button("Add") {
-                    store.add(keyword: newKeyword, subfolder: newSubfolder, category: selectedCategory)
-                    newKeyword = ""
-                    newSubfolder = ""
-                }
-            }
-
-            Section("Current Keywords") {
-                List(store.keywords) { entry in
-                    HStack {
-                        Text(entry.keyword)
-                        Spacer()
-                        Text(entry.subfolder)
-                        Text(entry.category).foregroundColor(.gray)
-                    }
-                }
+        VStack(spacing: 0) {
+            headerSection
+            EnhancedKeywordManager()
+        }
+        .frame(minWidth: 400, minHeight: 500)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(NSColor.windowBackgroundColor))
+    }
+    
+    private var headerSection: some View {
+        VStack(spacing: 10) {
+            HStack {
+                Text("Keyword Manager")
+                    .font(.title)
+                    .fontWeight(.bold)
+                Spacer()
             }
         }
-        .navigationTitle("Keyword Manager")
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+        .padding(.bottom, 10)
     }
+}
+
+#Preview {
+    KeywordManagerView()
 }

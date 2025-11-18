@@ -24,7 +24,6 @@ struct iCloudFileBrowserView: View {
             }
         }
         .onAppear { loadFiles() }
-        .navigationTitle("iCloud Files")
     }
 
     func loadFiles() {

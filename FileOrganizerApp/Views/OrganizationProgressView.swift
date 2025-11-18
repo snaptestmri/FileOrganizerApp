@@ -164,8 +164,8 @@ struct OrganizationProgressView: View {
             }
             .padding(.bottom, 20)
         }
-        .padding(.horizontal, 20)
-        .frame(width: 500, height: 600)
+        .frame(minWidth: 500, minHeight: 600)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
         .alert("Error", isPresented: $showError) {
             Button("OK") { }
@@ -192,7 +192,7 @@ struct OrganizationProgressView: View {
         addActivity("Starting file organization...", type: .info)
         addActivity("Found \(keywordStore.keywords.count) keyword rules", type: .info)
         
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async(execute: DispatchWorkItem {
             let sourceFolder = URL(fileURLWithPath: folderPath)
             let mover = FileMover(sourceFolder: sourceFolder)
             
@@ -244,7 +244,7 @@ struct OrganizationProgressView: View {
                     self.showError(message: error.localizedDescription)
                 }
             }
-        }
+        })
     }
     
     private func stopOrganization() {
