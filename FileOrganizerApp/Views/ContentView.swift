@@ -22,6 +22,9 @@ struct ContentView: View {
                 NavigationLink("iCloud File Browser") {
                     iCloudFileBrowserView()
                 }
+                NavigationLink("Settings") {
+                    SettingsView()
+                }
             }
             .listStyle(SidebarListStyle())
             .frame(minWidth: 150)

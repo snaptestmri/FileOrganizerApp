@@ -6,7 +6,29 @@ struct ClassificationResult: Codable, CustomStringConvertible {
     let subfolder: String
     let confidence: Double  // 0.0 to 1.0
     let reasoning: String?  // Optional explanation
-    var method: ClassificationMethod = .llm  // Classification method used
+    var method: ClassificationMethod  // Classification method used
+    
+    enum CodingKeys: String, CodingKey {
+        case category, subfolder, confidence, reasoning, method
+    }
+    
+    init(category: String, subfolder: String, confidence: Double, reasoning: String? = nil, method: ClassificationMethod = .llm) {
+        self.category = category
+        self.subfolder = subfolder
+        self.confidence = confidence
+        self.reasoning = reasoning
+        self.method = method
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        category = try container.decode(String.self, forKey: .category)
+        subfolder = try container.decode(String.self, forKey: .subfolder)
+        confidence = try container.decode(Double.self, forKey: .confidence)
+        reasoning = try container.decodeIfPresent(String.self, forKey: .reasoning)
+        // method is optional in JSON, default to .llm if missing
+        method = (try? container.decode(ClassificationMethod.self, forKey: .method)) ?? .llm
+    }
     
     var description: String {
         return """

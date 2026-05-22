@@ -6,6 +6,7 @@ struct AIClassificationView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var classificationManager: FileClassificationManager?
     @State private var selectedServiceType: ServiceType = .ollama
+    @State private var classificationMode: ClassificationMode = ClassificationMode.persisted
     @State private var isRunning = false
     @State private var progress = 0.0
     @State private var currentFile = ""
@@ -18,7 +19,10 @@ struct AIClassificationView: View {
     @State private var errorMessage = ""
     @State private var activities: [ActivityLog] = []
     @State private var canDismiss = false
-    @State private var classifications: [(FileMetadata, ClassificationResult)] = []
+    @ObservedObject private var profileStore = ProfileStore.shared
+    @State private var classifications: [(FileMetadata, ClassificationResult, OrganizeDestination)] = []
+    @State private var csvExportPath: String? = nil
+    @State private var showExportSuccess = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -65,12 +69,22 @@ struct AIClassificationView: View {
                         }
                         
                         ServiceOption(
-                            title: "OpenAI (Cloud AI)",
-                            description: "Requires internet and API key. More powerful.",
+                            title: "OpenAI (ChatGPT)",
+                            description: "Requires internet and API key. GPT-4/GPT-3.5 models.",
                             isSelected: selectedServiceType == .openai,
                             isAvailable: checkOpenAIAvailable()
                         ) {
                             selectedServiceType = .openai
+                            updateClassificationManager()
+                        }
+                        
+                        ServiceOption(
+                            title: "Anthropic (Claude)",
+                            description: "Requires internet and API key. Claude 3 models.",
+                            isSelected: selectedServiceType == .anthropic,
+                            isAvailable: checkAnthropicAvailable()
+                        ) {
+                            selectedServiceType = .anthropic
                             updateClassificationManager()
                         }
                         
@@ -82,6 +96,26 @@ struct AIClassificationView: View {
                         ) {
                             selectedServiceType = .fallback
                             updateClassificationManager()
+                        }
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Classification Style")
+                        .font(.headline)
+
+                    VStack(spacing: 8) {
+                        ForEach(ClassificationMode.allCases, id: \.self) { mode in
+                            ServiceOption(
+                                title: mode.displayName,
+                                description: mode.description,
+                                isSelected: classificationMode == mode,
+                                isAvailable: true
+                            ) {
+                                classificationMode = mode
+                                ClassificationMode.persisted = mode
+                                updateClassificationManager()
+                            }
                         }
                     }
                 }
@@ -182,6 +216,36 @@ struct AIClassificationView: View {
                         ResultRow(title: "Errors", value: "\(results.errorFiles)")
                         ResultRow(title: "Time Taken", value: results.timeTaken)
                     }
+                    
+                    Divider()
+                    
+                    // CSV Export Section
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Export Results")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        
+                        Button(action: {
+                            exportToCSV()
+                        }) {
+                            HStack {
+                                Image(systemName: "square.and.arrow.down")
+                                Text("Export to CSV")
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(classifications.isEmpty)
+                        
+                        if showExportSuccess, let csvPath = csvExportPath {
+                            HStack(spacing: 4) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("Exported to: \(csvPath)")
+                                    .font(.caption)
+                                    .foregroundColor(.green)
+                            }
+                        }
+                    }
                 }
                 .padding()
                 .background(Color.green.opacity(0.1))
@@ -224,12 +288,30 @@ struct AIClassificationView: View {
         } message: {
             Text(errorMessage)
         }
+        .alert("CSV Exported", isPresented: $showExportSuccess) {
+            Button("OK") { }
+            if let csvPath = csvExportPath {
+                Button("Show in Finder") {
+                    let url = URL(fileURLWithPath: csvPath)
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                }
+            }
+        } message: {
+            if let csvPath = csvExportPath {
+                Text("CSV file exported to:\n\(csvPath)")
+            } else {
+                Text("CSV file exported successfully")
+            }
+        }
         .onAppear {
+            classificationMode = ClassificationMode.persisted
             // Initialize with best available service
             if checkOllamaAvailable() {
                 selectedServiceType = .ollama
             } else if checkOpenAIAvailable() {
                 selectedServiceType = .openai
+            } else if checkAnthropicAvailable() {
+                selectedServiceType = .anthropic
             } else {
                 selectedServiceType = .fallback
             }
@@ -240,6 +322,7 @@ struct AIClassificationView: View {
     enum ServiceType {
         case ollama
         case openai
+        case anthropic
         case fallback
     }
     
@@ -268,6 +351,68 @@ struct AIClassificationView: View {
         return UserDefaults.standard.string(forKey: "openai_api_key") != nil
     }
     
+    private func checkAnthropicAvailable() -> Bool {
+        // Check if Anthropic API key is configured
+        return UserDefaults.standard.string(forKey: "anthropic_api_key") != nil
+    }
+    
+    // MARK: - CSV Export
+    
+    private func exportToCSV() {
+        guard !classifications.isEmpty else {
+            showError(message: "No classification data to export")
+            return
+        }
+        
+        // Generate CSV content
+        var csvContent = "File Name,Category,Subfolder,Folder Path,Ownership,Subject,Region Segment,Confidence,Method,Reasoning\n"
+        
+        for (metadata, result, destination) in classifications {
+            let fileName = metadata.fileName
+            let category = result.category
+            let subfolder = result.subfolder
+            let folderPath = destination.relativePath(profile: profileStore.profile)
+            let ownership = destination.subject.ownership.rawValue
+            let subject = destination.subject.primarySubjectName ?? ""
+            let region = destination.location.pathRegionSegment ?? ""
+            let confidence = String(format: "%.2f", result.confidence)
+            let method = result.method.rawValue
+            let reasoning = result.reasoning?.replacingOccurrences(of: "\"", with: "\"\"") ?? "" // Escape quotes in CSV
+            
+            // Escape commas and quotes in file name
+            let escapedFileName = fileName.contains(",") || fileName.contains("\"") 
+                ? "\"\(fileName.replacingOccurrences(of: "\"", with: "\"\""))\""
+                : fileName
+            
+            let escapedReasoning = reasoning.isEmpty ? "" : (reasoning.contains(",") || reasoning.contains("\"") 
+                ? "\"\(reasoning)\""
+                : reasoning)
+            
+            let escapedSubject = csvEscape(subject)
+            csvContent += "\(escapedFileName),\(category),\(subfolder),\(csvEscape(folderPath)),\(ownership),\(escapedSubject),\(csvEscape(region)),\(confidence),\(method),\(escapedReasoning)\n"
+        }
+        
+        // Generate filename with timestamp
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        let timestamp = dateFormatter.string(from: Date())
+        let fileName = "FileClassification_\(timestamp).csv"
+        
+        // Save to Downloads folder
+        let fileManager = FileManager.default
+        let downloadsURL = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask).first!
+        let csvURL = downloadsURL.appendingPathComponent(fileName)
+        
+        do {
+            try csvContent.write(to: csvURL, atomically: true, encoding: .utf8)
+            csvExportPath = csvURL.path
+            showExportSuccess = true
+            addActivity("CSV exported to: \(fileName)", type: .success)
+        } catch {
+            showError(message: "Failed to export CSV: \(error.localizedDescription)")
+        }
+    }
+    
     private func updateClassificationManager() {
         let llmService: LLMService
         
@@ -281,6 +426,13 @@ struct AIClassificationView: View {
                 // Fallback to Mock if no API key
                 llmService = MockLLMService()
             }
+        case .anthropic:
+            if let apiKey = UserDefaults.standard.string(forKey: "anthropic_api_key"), !apiKey.isEmpty {
+                llmService = AnthropicLLMService(apiKey: apiKey)
+            } else {
+                // Fallback to Mock if no API key
+                llmService = MockLLMService()
+            }
         case .fallback:
             // Use MockLLM that always fails to force fallback
             let mockLLM = MockLLMService()
@@ -288,13 +440,19 @@ struct AIClassificationView: View {
             llmService = mockLLM
         }
         
+        let promptBuilder = ClassificationPromptBuilder()
+        promptBuilder.userProfile = profileStore.profile
+        promptBuilder.knownPeople = profileStore.knownPeople
+        promptBuilder.classificationMode = classificationMode
+
         classificationManager = FileClassificationManager(
             llmService: llmService,
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
-            promptBuilder: ClassificationPromptBuilder()
+            promptBuilder: promptBuilder
         )
         classificationManager?.useFallbackOnFailure = true
+        classificationManager?.classificationMode = classificationMode
     }
     
     private func startClassification() {
@@ -314,12 +472,23 @@ struct AIClassificationView: View {
         
         addActivity("Starting AI classification...", type: .info)
         addActivity("Using service: \(selectedServiceType)", type: .info)
-        
+        addActivity("Style: \(classificationMode.displayName)", type: .info)
+        if profileStore.profile.hasIdentity {
+            addActivity("Profile: \(profileStore.profile.fullName)", type: .info)
+            if let region = profileStore.profile.homeRegion, !region.isEmpty {
+                addActivity("Default region: \(region)", type: .info)
+            }
+        } else {
+            addActivity("No profile — set name in Settings for subject-aware paths", type: .warning)
+        }
+
         Task {
             let sourceFolder = URL(fileURLWithPath: folderPath)
             let mover = AIClassifierMover(
                 sourceFolder: sourceFolder,
-                classificationManager: manager
+                classificationManager: manager,
+                profile: profileStore.profile,
+                knownPeople: profileStore.knownPeople
             )
             
             do {
@@ -337,9 +506,9 @@ struct AIClassificationView: View {
                             }
                         }
                     },
-                    classificationCallback: { metadata, result in
+                    classificationCallback: { metadata, result, destination in
                         Task { @MainActor in
-                            self.classifications.append((metadata, result))
+                            self.classifications.append((metadata, result, destination))
                         }
                     }
                 )
@@ -384,6 +553,13 @@ struct AIClassificationView: View {
     private func showError(message: String) {
         errorMessage = message
         showError = true
+    }
+
+    private func csvEscape(_ value: String) -> String {
+        if value.contains(",") || value.contains("\"") {
+            return "\"\(value.replacingOccurrences(of: "\"", with: "\"\""))\""
+        }
+        return value
     }
 }
 

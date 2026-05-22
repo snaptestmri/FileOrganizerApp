@@ -42,17 +42,8 @@ struct FileMover {
     func runWithProgress(with keywords: [KeywordEntry], progressCallback: @escaping (Int, Int, String) -> Void) throws -> FileMoveResults {
         let startTime = Date()
         
-        // Get all files in the source folder
-        let contents = try FileManager.default.contentsOfDirectory(
-            at: sourceFolder, 
-            includingPropertiesForKeys: [.isRegularFileKey], 
-            options: [.skipsHiddenFiles]
-        )
-        
-        let files = contents.filter { url in
-            let resourceValues = try? url.resourceValues(forKeys: [.isRegularFileKey])
-            return resourceValues?.isRegularFile == true
-        }
+        // Get all files recursively from source folder and subfolders
+        let files = try getAllFilesRecursively(from: sourceFolder)
         
         // Only count files with a matching keyword as 'to process'
         let filesToProcess = files.filter { file in
@@ -89,9 +80,23 @@ struct FileMover {
                     let timestamp = ISO8601DateFormatter().string(from: Date())
                         .replacingOccurrences(of: ":", with: "-")
                         .replacingOccurrences(of: ".", with: "-")
-                    let nameWithoutExtension = currentFileName.replacingOccurrences(of: ".\(currentFileName.components(separatedBy: ".").last ?? "")", with: "")
-                    let fileExtension = currentFileName.components(separatedBy: ".").last ?? ""
-                    destination = targetFolder.appendingPathComponent("\(nameWithoutExtension)_\(timestamp).\(fileExtension)")
+                    
+                    // Safely extract file extension and name
+                    let fileExtension: String
+                    let nameWithoutExtension: String
+                    if let lastDotIndex = currentFileName.lastIndex(of: "."), lastDotIndex != currentFileName.startIndex {
+                        fileExtension = String(currentFileName[currentFileName.index(after: lastDotIndex)...])
+                        nameWithoutExtension = String(currentFileName[..<lastDotIndex])
+                    } else {
+                        fileExtension = ""
+                        nameWithoutExtension = currentFileName
+                    }
+                    
+                    if !fileExtension.isEmpty {
+                        destination = targetFolder.appendingPathComponent("\(nameWithoutExtension)_\(timestamp).\(fileExtension)")
+                    } else {
+                        destination = targetFolder.appendingPathComponent("\(nameWithoutExtension)_\(timestamp)")
+                    }
                 }
                 // Move the file
                 try FileManager.default.moveItem(at: file, to: destination)
@@ -121,6 +126,34 @@ struct FileMover {
         dialog.canChooseFiles = false
         dialog.allowsMultipleSelection = false
         return dialog.runModal() == .OK ? dialog.url : nil
+    }
+    
+    /// Recursively get all files from a directory and its subdirectories
+    private func getAllFilesRecursively(from folderURL: URL) throws -> [URL] {
+        let fileManager = FileManager.default
+        var allFiles: [URL] = []
+        
+        func scanDirectory(_ url: URL) throws {
+            let contents = try fileManager.contentsOfDirectory(
+                at: url,
+                includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
+                options: [.skipsHiddenFiles]
+            )
+            
+            for item in contents {
+                let resourceValues = try? item.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey])
+                
+                if resourceValues?.isRegularFile == true {
+                    allFiles.append(item)
+                } else if resourceValues?.isDirectory == true {
+                    // Recursively scan subdirectories
+                    try scanDirectory(item)
+                }
+            }
+        }
+        
+        try scanDirectory(folderURL)
+        return allFiles
     }
     
     private func formatTimeInterval(_ interval: TimeInterval) -> String {

@@ -301,6 +301,10 @@ struct FolderScanView: View {
                     // Update progress
                     DispatchQueue.main.async {
                         self.processedItems = index + 1
+                        guard self.totalItems > 0 else {
+                            self.scanProgress = 0.0
+                            return
+                        }
                         self.scanProgress = Double(index + 1) / Double(self.totalItems)
                         self.scanStatus = "Processing: \(name)"
                     }

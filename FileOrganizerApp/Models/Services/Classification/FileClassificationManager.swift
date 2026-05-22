@@ -22,6 +22,11 @@ class FileClassificationManager {
     var useExamples: Bool = true
     var enableTelemetry: Bool = true
     var useFallbackOnFailure: Bool = true
+
+    /// Switch between standard (file-type) and personal domain (life-domain) taxonomy.
+    var classificationMode: ClassificationMode = .standard {
+        didSet { promptBuilder.classificationMode = classificationMode }
+    }
     
     // MARK: - Initialization
     
@@ -47,12 +52,17 @@ class FileClassificationManager {
         var classificationMethod: ClassificationMethod = .llm
         var result: ClassificationResult?
         
-        // Determine if category is pre-determined by extension
-        let preCategory = fallbackClassifier.determineCategoryFromExtension(metadata.fileExtension)
+        // Determine if category is pre-determined by extension (pass fileName for archive/installer classification)
+        let preCategory = fallbackClassifier.determineCategoryFromExtension(metadata.fileExtension, fileName: metadata.fileName)
         
         // Try LLM classification first
+        print("🔵 Calling LLM for: \(metadata.fileName)")
         do {
             result = try await classifyWithLLM(metadata: metadata, preCategory: preCategory)
+            if let result {
+                let reason = result.reasoning ?? "(no reasoning provided)"
+                print("✅ \(metadata.fileName) → \(result.category)/\(result.subfolder) (\(String(format: "%.2f", result.confidence))) — \(reason)")
+            }
             
             if enableTelemetry {
                 let duration = Date().timeIntervalSince(startTime)
@@ -65,7 +75,21 @@ class FileClassificationManager {
                 )
             }
         } catch {
-            print("⚠️ LLM classification failed: \(error)")
+            // Provide more helpful error messages
+            if let nsError = error as NSError? {
+                if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorTimedOut {
+                    print("⚠️ LLM classification timed out: \(error.localizedDescription)")
+                    print("💡 Tip: Ollama may need more time. Try reducing prompt size or using a faster model.")
+                } else if nsError.domain == "OllamaLLMService" {
+                    print("⚠️ Ollama error: \(error.localizedDescription)")
+                    print("💡 Tip: Make sure Ollama is running: 'ollama serve'")
+                } else {
+                    print("⚠️ LLM classification failed: \(error.localizedDescription)")
+                }
+            } else {
+                print("⚠️ LLM classification failed: \(error)")
+            }
+            print("🔄 Falling back to rule-based classifier")
             classificationMethod = .fallback
             
             if enableTelemetry {
@@ -82,8 +106,13 @@ class FileClassificationManager {
         
         // Fallback to rule-based classification if LLM fails
         if result == nil && useFallbackOnFailure {
-            result = fallbackClassifier.classify(metadata)
+            print("⚡ Using fallback classifier for: \(metadata.fileName)")
+            result = fallbackClassifier.classify(metadata, mode: classificationMode)
             classificationMethod = .fallback
+            if let result {
+                let reason = result.reasoning ?? "(no reasoning provided)"
+                print("✅ \(metadata.fileName) → \(result.category)/\(result.subfolder) (\(String(format: "%.2f", result.confidence))) — \(reason)")
+            }
             
             if enableTelemetry {
                 let duration = Date().timeIntervalSince(startTime)
@@ -145,6 +174,14 @@ class FileClassificationManager {
         // Build the prompt
         let prompt = promptBuilder.buildPrompt(metadata: metadata, preCategory: preCategory)
         
+        #if DEBUG
+        if let contentPreview = metadata.contentPreview, !contentPreview.isEmpty {
+            print("📄 Content preview available (\(contentPreview.count) chars) for: \(metadata.fileName)")
+        } else {
+            print("⚠️ No content preview for: \(metadata.fileName) (extension: .\(metadata.fileExtension))")
+        }
+        #endif
+        
         // Call LLM service
         let response = try await llmService.generateCompletion(prompt: prompt)
         
@@ -153,12 +190,20 @@ class FileClassificationManager {
             throw ClassificationError.parseError("Failed to parse LLM response: \(response)")
         }
         
-        // Validate result
-        guard validateClassificationResult(result) else {
-            throw ClassificationError.parseError("Validation failed for result: \(result)")
+        let normalized = ClassificationConstants.normalizeLLMClassification(
+            result,
+            metadata: metadata,
+            mode: classificationMode
+        )
+        if normalized.category != result.category || normalized.subfolder != result.subfolder {
+            print("↪️ \(metadata.fileName): corrected \(result.category)/\(result.subfolder) → \(normalized.category)/\(normalized.subfolder)")
         }
-        
-        return result
+
+        guard validateClassificationResult(normalized) else {
+            throw ClassificationError.parseError("Validation failed for result: \(normalized)")
+        }
+
+        return normalized
     }
     
     /// Parse LLM response with robust error handling
@@ -209,16 +254,21 @@ class FileClassificationManager {
     
     /// Validate classification result
     private func validateClassificationResult(_ result: ClassificationResult) -> Bool {
-        let validCategories = ["Media", "Projects", "Documents", "Archive"]
-        
+        let validCategories = classificationMode == .personalDomain
+            ? ClassificationConstants.personalDomainCategories
+            : ClassificationConstants.validCategories
+
         // Check category is valid
         guard validCategories.contains(result.category) else {
             print("⚠️ Invalid category: \(result.category)")
             return false
         }
-        
+
         // Check subfolder is valid for the category
-        let validSubfolders = ClassificationConstants.validSubfolders[result.category] ?? []
+        let subfolderMap = classificationMode == .personalDomain
+            ? ClassificationConstants.personalDomainSubfolders
+            : ClassificationConstants.validSubfolders
+        let validSubfolders = subfolderMap[result.category] ?? []
         guard validSubfolders.contains(result.subfolder) else {
             print("⚠️ Invalid subfolder '\(result.subfolder)' for category '\(result.category)'")
             return false

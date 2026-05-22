@@ -133,7 +133,10 @@ final class NewArchitectureTests: XCTestCase {
         XCTAssertEqual(classifier.determineCategoryFromExtension("pdf"), "Documents")
         XCTAssertEqual(classifier.determineCategoryFromExtension("jpg"), "Media")
         XCTAssertEqual(classifier.determineCategoryFromExtension("stl"), "Projects")
-        XCTAssertEqual(classifier.determineCategoryFromExtension("zip"), "Archive")
+        // Archives are classified by content - test with a design-related archive
+        XCTAssertEqual(classifier.determineCategoryFromExtension("zip", fileName: "vector_assets.zip"), "Projects")
+        // Generic archive goes to Documents
+        XCTAssertEqual(classifier.determineCategoryFromExtension("zip", fileName: "backup.zip"), "Documents")
     }
     
     // MARK: - FileClassificationManager Tests
@@ -522,7 +525,7 @@ final class NewArchitectureTests: XCTestCase {
         XCTAssertTrue(ClassificationConstants.isValidCategory("Media"))
         XCTAssertTrue(ClassificationConstants.isValidCategory("Projects"))
         XCTAssertTrue(ClassificationConstants.isValidCategory("Documents"))
-        XCTAssertTrue(ClassificationConstants.isValidCategory("Archive"))
+        // Archive category removed - archives are classified by content
         XCTAssertFalse(ClassificationConstants.isValidCategory("Invalid"))
     }
     
@@ -537,7 +540,8 @@ final class NewArchitectureTests: XCTestCase {
         XCTAssertEqual(ClassificationConstants.getCategoryForExtension("jpg"), "Media")
         XCTAssertEqual(ClassificationConstants.getCategoryForExtension("pdf"), "Documents")
         XCTAssertEqual(ClassificationConstants.getCategoryForExtension("stl"), "Projects")
-        XCTAssertEqual(ClassificationConstants.getCategoryForExtension("zip"), "Archive")
+        // Archives no longer have a fixed category - they're classified by content
+        XCTAssertNil(ClassificationConstants.getCategoryForExtension("zip"))
         XCTAssertNil(ClassificationConstants.getCategoryForExtension("unknown"))
     }
 }

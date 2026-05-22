@@ -5,32 +5,34 @@ class AIClassifierMover {
     let sourceFolder: URL
     let baseTargetFolder: URL
     let classificationManager: FileClassificationManager
-    
-    init(sourceFolder: URL, classificationManager: FileClassificationManager) {
+    let profile: UserProfile
+    let knownPeople: [KnownPerson]
+
+    init(
+        sourceFolder: URL,
+        classificationManager: FileClassificationManager,
+        profile: UserProfile = UserProfile(),
+        knownPeople: [KnownPerson] = []
+    ) {
         self.sourceFolder = sourceFolder
         self.baseTargetFolder = sourceFolder
         self.classificationManager = classificationManager
+        var p = profile
+        p.syncDerivedFields()
+        self.profile = p
+        self.knownPeople = knownPeople
     }
     
     
     /// Run AI classification and move files with progress tracking
     func runWithProgress(
         progressCallback: @escaping (Int, Int, String, String?) -> Void,
-        classificationCallback: @escaping (FileMetadata, ClassificationResult) -> Void
+        classificationCallback: @escaping (FileMetadata, ClassificationResult, OrganizeDestination) -> Void
     ) async throws -> FileMoveResults {
         let startTime = Date()
         
-        // Get all files
-        let contents = try FileManager.default.contentsOfDirectory(
-            at: sourceFolder,
-            includingPropertiesForKeys: [.isRegularFileKey],
-            options: [.skipsHiddenFiles]
-        )
-        
-        let files = contents.filter { url in
-            let resourceValues = try? url.resourceValues(forKeys: [.isRegularFileKey])
-            return resourceValues?.isRegularFile == true
-        }
+        // Get all files recursively from source folder and subfolders
+        let files = try getAllFilesRecursively(from: sourceFolder)
         
         let totalFiles = files.count
         var processedFiles = 0
@@ -41,7 +43,7 @@ class AIClassifierMover {
         // Extract metadata for all files
         var fileMetadata: [(URL, FileMetadata)] = []
         for file in files {
-            if let metadata = FileMetadata.extract(from: file, includePreview: false) {
+            if let metadata = FileMetadata.extract(from: file, includePreview: true, maxPreviewLength: 500) {
                 fileMetadata.append((file, metadata))
             }
         }
@@ -68,17 +70,26 @@ class AIClassifierMover {
                 }
                 
                 let classification = classifications[index]
+                let destination = OrganizePlanner.plan(
+                    metadata: metadata,
+                    classification: classification,
+                    profile: profile,
+                    knownPeople: knownPeople
+                )
                 let currentFileName = fileURL.lastPathComponent
-                
+                let relativePath = destination.relativePath(profile: profile)
+
                 processedFiles += 1
-                progressCallback(processedFiles, totalFiles, currentFileName, "\(classification.category)/\(classification.subfolder)")
-                classificationCallback(metadata, classification)
-                
-                // Move file based on classification
+                progressCallback(processedFiles, totalFiles, currentFileName, relativePath)
+                classificationCallback(metadata, classification, destination)
+
+                // Move file based on classification + subject + location
                 do {
-                    let targetFolder = baseTargetFolder
-                        .appendingPathComponent(classification.category)
-                        .appendingPathComponent(classification.subfolder)
+                    let targetFolder = OrganizePlanner.targetFolderURL(
+                        base: baseTargetFolder,
+                        destination: destination,
+                        profile: profile
+                    )
                     
                     try FileManager.default.createDirectory(
                         at: targetFolder,
@@ -90,9 +101,23 @@ class AIClassifierMover {
                         let timestamp = ISO8601DateFormatter().string(from: Date())
                             .replacingOccurrences(of: ":", with: "-")
                             .replacingOccurrences(of: ".", with: "-")
-                        let nameWithoutExtension = currentFileName.replacingOccurrences(of: ".\(currentFileName.components(separatedBy: ".").last ?? "")", with: "")
-                        let fileExtension = currentFileName.components(separatedBy: ".").last ?? ""
-                        destination = targetFolder.appendingPathComponent("\(nameWithoutExtension)_\(timestamp).\(fileExtension)")
+                        
+                        // Safely extract file extension and name
+                        let fileExtension: String
+                        let nameWithoutExtension: String
+                        if let lastDotIndex = currentFileName.lastIndex(of: "."), lastDotIndex != currentFileName.startIndex {
+                            fileExtension = String(currentFileName[currentFileName.index(after: lastDotIndex)...])
+                            nameWithoutExtension = String(currentFileName[..<lastDotIndex])
+                        } else {
+                            fileExtension = ""
+                            nameWithoutExtension = currentFileName
+                        }
+                        
+                        if !fileExtension.isEmpty {
+                            destination = targetFolder.appendingPathComponent("\(nameWithoutExtension)_\(timestamp).\(fileExtension)")
+                        } else {
+                            destination = targetFolder.appendingPathComponent("\(nameWithoutExtension)_\(timestamp)")
+                        }
                     }
                     
                     try FileManager.default.moveItem(at: fileURL, to: destination)
@@ -115,6 +140,34 @@ class AIClassifierMover {
             errorFiles: errorFiles,
             timeTaken: timeTaken
         )
+    }
+    
+    /// Recursively get all files from a directory and its subdirectories
+    private func getAllFilesRecursively(from folderURL: URL) throws -> [URL] {
+        let fileManager = FileManager.default
+        var allFiles: [URL] = []
+        
+        func scanDirectory(_ url: URL) throws {
+            let contents = try fileManager.contentsOfDirectory(
+                at: url,
+                includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
+                options: [.skipsHiddenFiles]
+            )
+            
+            for item in contents {
+                let resourceValues = try? item.resourceValues(forKeys: [.isRegularFileKey, .isDirectoryKey])
+                
+                if resourceValues?.isRegularFile == true {
+                    allFiles.append(item)
+                } else if resourceValues?.isDirectory == true {
+                    // Recursively scan subdirectories
+                    try scanDirectory(item)
+                }
+            }
+        }
+        
+        try scanDirectory(folderURL)
+        return allFiles
     }
     
     private func formatTimeInterval(_ interval: TimeInterval) -> String {

@@ -29,27 +29,27 @@ class MockLLMService: LLMService {
         // Generate a mock response based on the prompt
         if prompt.contains(".jpg") || prompt.contains(".png") || prompt.contains(".webp") {
             return """
-            {"category": "Media", "subfolder": "Photos", "confidence": 0.95, "reasoning": "extension indicates image file"}
+            {"category": "Media", "subfolder": "Photos", "confidence": 0.95, "reasoning": "extension indicates image file", "method": "llm"}
             """
         } else if prompt.contains(".mp4") || prompt.contains(".mov") {
             return """
-            {"category": "Media", "subfolder": "Videos", "confidence": 0.95, "reasoning": "extension indicates video file"}
+            {"category": "Media", "subfolder": "Videos", "confidence": 0.95, "reasoning": "extension indicates video file", "method": "llm"}
             """
         } else if prompt.contains(".stl") || prompt.contains(".obj") {
             return """
-            {"category": "Projects", "subfolder": "3D", "confidence": 0.95, "reasoning": "extension indicates 3D model"}
+            {"category": "Projects", "subfolder": "3D", "confidence": 0.95, "reasoning": "extension indicates 3D model", "method": "llm"}
             """
         } else if prompt.contains(".swift") || prompt.contains(".py") {
             return """
-            {"category": "Projects", "subfolder": "Code", "confidence": 0.95, "reasoning": "extension indicates code file"}
+            {"category": "Projects", "subfolder": "Code", "confidence": 0.95, "reasoning": "extension indicates code file", "method": "llm"}
             """
         } else if prompt.contains("invoice") {
             return """
-            {"category": "Documents", "subfolder": "Invoices", "confidence": 0.92, "reasoning": "filename contains 'invoice'"}
+            {"category": "Documents", "subfolder": "Invoices", "confidence": 0.92, "reasoning": "filename contains 'invoice'", "method": "llm"}
             """
         } else {
             return """
-            {"category": "Documents", "subfolder": "General", "confidence": 0.80, "reasoning": "default classification"}
+            {"category": "Documents", "subfolder": "General", "confidence": 0.80, "reasoning": "default classification", "method": "llm"}
             """
         }
     }

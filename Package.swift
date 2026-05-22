@@ -16,16 +16,21 @@ let package = Package(
         .executableTarget(
             name: "FileOrganizerApp",
             path: "FileOrganizerApp",
-            exclude: ["Info.plist"],
+            exclude: [
+                "Info.plist",
+                "Entitlements.plist",
+                "Docs",
+                "Models/README.md",
+                "scripts"
+            ],
             swiftSettings: [
-                .unsafeFlags(["-framework", "AppKit", "-framework", "SwiftUI"])
+                .unsafeFlags(["-framework", "AppKit", "-framework", "SwiftUI", "-framework", "PDFKit"])
             ]
         ),
         .testTarget(
             name: "FileOrganizerAppTests",
             dependencies: ["FileOrganizerApp"],
-            path: "Tests",
-            exclude: ["../Docs"]
+            path: "Tests"
         )
     ]
 ) 

@@ -9,7 +9,8 @@ Docs/
 ├── Architecture/          # System architecture and design
 │   ├── DESIGN_DOCUMENT.md
 │   ├── ARCHITECTURE_BLOCKS.md
-│   └── ARCHITECTURE_MIGRATION_STATUS.md
+│   ├── ARCHITECTURE_MIGRATION_STATUS.md
+│   └── SUBJECT_AND_LOCATION_FILING_DESIGN.md
 │
 ├── Testing/              # Testing guides and documentation
 │   ├── AIClassificationTests_README.md
@@ -30,7 +31,8 @@ Docs/
     ├── HOW_OLLAMA_WORKS.md
     ├── OFFLINE_CLASSIFICATION_GUIDE.md
     ├── LLM_CLASSIFICATION_REQUIREMENTS.md
-    └── CLASSIFIER_IMPROVEMENTS.md
+    ├── CLASSIFIER_IMPROVEMENTS.md
+    └── BEST_PRACTICES.md
 ```
 
 ## 🚀 Quick Start
@@ -42,12 +44,18 @@ Docs/
    - Component design
    - Data flow and interactions
 
-2. **Visual Reference**: [Architecture/ARCHITECTURE_BLOCKS.md](./Architecture/ARCHITECTURE_BLOCKS.md)
+2. **Best Practices**: [Guides/BEST_PRACTICES.md](./Guides/BEST_PRACTICES.md)
+   - Code quality guidelines
+   - Security practices
+   - Performance optimization
+   - Testing strategies
+
+3. **Visual Reference**: [Architecture/ARCHITECTURE_BLOCKS.md](./Architecture/ARCHITECTURE_BLOCKS.md)
    - System overview diagrams
    - Component interaction blocks
    - Data flow visualizations
 
-3. **Migration Status**: [Architecture/ARCHITECTURE_MIGRATION_STATUS.md](./Architecture/ARCHITECTURE_MIGRATION_STATUS.md)
+4. **Migration Status**: [Architecture/ARCHITECTURE_MIGRATION_STATUS.md](./Architecture/ARCHITECTURE_MIGRATION_STATUS.md)
    - Current architecture state
    - Migration completion status
    - New vs old architecture comparison
@@ -101,6 +109,7 @@ Docs/
 - **[HOW_OLLAMA_WORKS.md](./Guides/HOW_OLLAMA_WORKS.md)** - Understanding Ollama
 - **[LLM_CLASSIFICATION_REQUIREMENTS.md](./Guides/LLM_CLASSIFICATION_REQUIREMENTS.md)** - Requirements specification
 - **[CLASSIFIER_IMPROVEMENTS.md](./Guides/CLASSIFIER_IMPROVEMENTS.md)** - Improvement notes
+- **[BEST_PRACTICES.md](./Guides/BEST_PRACTICES.md)** - Development best practices and code quality guidelines
 
 ## 🔑 Key Concepts
 

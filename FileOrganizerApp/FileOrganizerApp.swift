@@ -36,40 +36,33 @@ struct FileOrganizerApp: App {
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.regular)
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
+        #if DEBUG
         print("🚀 App launched")
+        #endif
 
-        // Ensure the app can receive text input
-        NSApp.activate(ignoringOtherApps: true)
-
-        // Force the window to the front after a short delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            if let window = NSApp.windows.first {
-                window.makeKeyAndOrderFront(nil)
-                NSApp.activate(ignoringOtherApps: true)
-                print("🔧 Window forced to front with keyboard focus")
-            }
+        Task { @MainActor in
+            AppActivation.activate()
         }
 
-        // Set up text input handling
         NotificationCenter.default.addObserver(
             forName: NSWindow.didBecomeKeyNotification,
             object: nil,
             queue: .main
         ) { _ in
-            print("🔧 Window became key - text input should work now")
+            Task { @MainActor in AppActivation.activate() }
         }
     }
-    
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
     }
-    
+
     func applicationDidBecomeActive(_ notification: Notification) {
-        print("🔧 App became active")
-        // Force window to front and make it key
-        if let window = NSApp.windows.first {
-            window.makeKeyAndOrderFront(nil)
-        }
+        Task { @MainActor in AppActivation.activate() }
     }
 }

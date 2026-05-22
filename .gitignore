@@ -1,0 +1,12 @@
+# Swift Package Manager
+.build/
+.swiftpm/
+*.xcodeproj
+xcuserdata/
+DerivedData/
+
+# macOS
+.DS_Store
+
+# Local profile / secrets (if added later)
+*.env

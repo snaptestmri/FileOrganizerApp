@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import Foundation
 
 struct DuplicateScanProgressView: View {
     let folderPath: String
@@ -180,12 +181,24 @@ struct DuplicateScanProgressView: View {
                         self.currentFile = fileName
                         self.addActivity("Scanning: \(fileName)", type: .processing)
                     }
-                    if let data = try? Data(contentsOf: fileURL) {
+                    // Check file size before loading into memory (limit to 100MB)
+                    let maxFileSize: Int64 = 100 * 1024 * 1024 // 100MB
+                    if let resourceValues = try? fileURL.resourceValues(forKeys: [.fileSizeKey]),
+                       let fileSize = resourceValues.fileSize,
+                       Int64(fileSize) <= maxFileSize,
+                       let data = try? Data(contentsOf: fileURL) {
                         let hash = data.sha256()
                         if fileHashes[hash] == nil {
                             fileHashes[hash] = []
                         }
                         fileHashes[hash]?.append(fileURL)
+                    } else if let resourceValues = try? fileURL.resourceValues(forKeys: [.fileSizeKey]),
+                              let fileSize = resourceValues.fileSize,
+                              Int64(fileSize) > maxFileSize {
+                        // Skip files larger than 100MB to avoid memory issues
+                        DispatchQueue.main.async {
+                            self.addActivity("Skipped large file: \(fileName) (\(ByteCountFormatter.string(fromByteCount: Int64(fileSize), countStyle: .file)))", type: .info)
+                        }
                     }
                 }
                 let foundDuplicates = fileHashes.filter { $0.value.count > 1 }

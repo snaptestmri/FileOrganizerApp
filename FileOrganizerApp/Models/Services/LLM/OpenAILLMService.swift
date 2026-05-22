@@ -22,7 +22,9 @@ class OpenAILLMService: LLMService {
     
     func generateCompletion(prompt: String) async throws -> String {
         // Implement actual OpenAI API call here
-        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
+        guard let url = URL(string: "https://api.openai.com/v1/chat/completions") else {
+            throw NSError(domain: "OpenAILLMService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid API URL"])
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")

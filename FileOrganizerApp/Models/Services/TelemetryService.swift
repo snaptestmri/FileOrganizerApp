@@ -239,7 +239,7 @@ class TelemetryService {
     private func calculateCategoryMetrics() -> [String: CategoryMetrics] {
         var categoryMetrics: [String: CategoryMetrics] = [:]
         
-        for category in ["Media", "Projects", "Documents", "Archive"] {
+        for category in ["Media", "Projects", "Documents"] {
             let categoryEvents = events.filter { $0.category == category }
             
             guard !categoryEvents.isEmpty else { continue }
