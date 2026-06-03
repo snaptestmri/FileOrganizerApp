@@ -447,9 +447,8 @@ final class AIClassificationTests: XCTestCase {
     // MARK: - FileClassificationManager Tests
     
     func testFileClassificationManagerInitialization() {
-        let mockLLM = MockLLMService()
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: StubLLMService.fast(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -458,11 +457,8 @@ final class AIClassificationTests: XCTestCase {
     }
     
     func testFileClassificationManagerWithFallback() async {
-        let mockLLM = MockLLMService()
-        mockLLM.shouldFail = true
-        
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: FailingLLMService(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -522,16 +518,16 @@ final class AIClassificationTests: XCTestCase {
         // TODO: Update when AIClassifierMover is refactored to use new architecture
     }
     
-    // MARK: - Mock Classifier Tests
+    // MARK: - Stub LLM Tests
     
-    func testMockLLMService() async {
-        let mockLLM = MockLLMService()
-        mockLLM.mockResponse = """
+    func testStubLLMService() async {
+        let stub = StubLLMService.fast()
+        stub.fixedResponse = """
         {"category": "Personal", "subfolder": "General", "confidence": 0.8, "reasoning": "test"}
         """
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: stub,
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -589,11 +585,8 @@ final class AIClassificationTests: XCTestCase {
         }
         
         // Use FileClassificationManager with FallbackClassifier
-        let mockLLM = MockLLMService()
-        mockLLM.shouldFail = true // Force fallback
-        
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: FailingLLMService(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()

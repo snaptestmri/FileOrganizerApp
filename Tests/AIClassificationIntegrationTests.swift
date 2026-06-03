@@ -54,10 +54,10 @@ final class AIClassificationIntegrationTests: XCTestCase {
         let classifications = try await AllureStep.runAsync(
             "Classify files with fallback classifier",
             block: {
-            let mockLLM = MockLLMService.failingInstantly()
+            let mockLLM = FailingLLMService()
 
             let manager = FileClassificationManager(
-                llmService: mockLLM,
+                llmService: FailingLLMService(),
                 telemetryService: TelemetryService.shared,
                 fallbackClassifier: FallbackClassifier(),
                 promptBuilder: ClassificationPromptBuilder()
@@ -106,10 +106,10 @@ final class AIClassificationIntegrationTests: XCTestCase {
         // Classify and organize using FileClassificationManager
         // Note: AIClassifierMover needs to be updated to use new architecture
         // For now, we'll test classification directly
-        let mockLLM = MockLLMService.failingInstantly()
+        let mockLLM = FailingLLMService()
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: FailingLLMService(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -151,10 +151,10 @@ final class AIClassificationIntegrationTests: XCTestCase {
     // MARK: - Classifier Selection Tests
     
     func testFileClassificationManagerFallbackChain() async {
-        let mockLLM = MockLLMService.failingInstantly() // Force fallback
+        let mockLLM = FailingLLMService() // Force fallback
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: FailingLLMService(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -198,13 +198,13 @@ final class AIClassificationIntegrationTests: XCTestCase {
     
     func testFileClassificationManagerWithMultipleServices() async {
         // Test that manager can work with different LLM services
-        let mockLLM = MockLLMService()
-        mockLLM.mockResponse = """
+        let stub = StubLLMService.fast()
+        stub.fixedResponse = """
         {"category": "Documents", "subfolder": "General", "confidence": 0.9, "reasoning": "test"}
         """
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: stub,
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -260,10 +260,10 @@ final class AIClassificationIntegrationTests: XCTestCase {
             }
         }
         
-        let mockLLM = MockLLMService.failingInstantly()
+        let mockLLM = FailingLLMService()
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: FailingLLMService(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()

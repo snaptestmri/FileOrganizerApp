@@ -114,6 +114,198 @@ final class ClassificationEvaluationHarness {
         return (report, fileSet)
     }
 
+    // MARK: - Classifier comparison (phase 1)
+
+    /// Resolves which backends to run: fallback always; ollama/openai when available.
+    func resolveComparisonBackends(
+        requested: [ClassifierBackend]? = nil,
+        includeOpenAI: Bool = true
+    ) async -> (used: [ClassifierBackend], skipped: [ClassifierBackend]) {
+        let candidates = requested ?? ClassifierBackend.allCases
+        var used: [ClassifierBackend] = []
+        var skipped: [ClassifierBackend] = []
+
+        for backend in candidates.sorted() {
+            switch backend {
+            case .fallback:
+                used.append(backend)
+            case .ollama:
+                if await Self.isOllamaAvailable() {
+                    used.append(backend)
+                } else {
+                    skipped.append(backend)
+                }
+            case .openai:
+                if includeOpenAI, EvaluationConfig.resolvedOpenAIAPIKey() != nil {
+                    used.append(backend)
+                } else {
+                    skipped.append(backend)
+                }
+            }
+        }
+        return (used, skipped)
+    }
+
+    /// Classifies each file with every available backend and records agreements.
+    func compareClassifiers(
+        fileSet: EvaluationFileSet,
+        config: EvaluationConfig,
+        backends requestedBackends: [ClassifierBackend]? = nil,
+        includeOpenAI: Bool = true
+    ) async -> ClassifierComparisonReport {
+        let (backendsUsed, backendsSkipped) = await resolveComparisonBackends(
+            requested: requestedBackends,
+            includeOpenAI: includeOpenAI
+        )
+
+        let fallbackClassifier = FallbackClassifier()
+        var rows: [ClassifierComparisonRow] = []
+
+        for fileURL in fileSet.urls {
+            let fileName = fileURL.lastPathComponent
+            let path = fileURL.path
+
+            guard let metadata = FileMetadata.extract(
+                from: fileURL,
+                includePreview: config.includePreview,
+                maxPreviewLength: config.maxPreviewLength
+            ) else {
+                let errorResults = backendsUsed.map { backend in
+                    ClassifierRunResult(
+                        backend: backend,
+                        category: "",
+                        subfolder: "",
+                        confidence: 0,
+                        method: .fallback,
+                        durationMs: 0,
+                        reasoning: nil,
+                        error: "Could not extract metadata"
+                    )
+                }
+                rows.append(ClassifierComparisonRow(
+                    fileName: fileName,
+                    filePath: path,
+                    results: errorResults
+                ))
+                continue
+            }
+
+            var runResults: [ClassifierRunResult] = []
+            for backend in backendsUsed {
+                let runResult = await classifyWithBackend(
+                    backend,
+                    metadata: metadata,
+                    config: config,
+                    fallbackClassifier: fallbackClassifier
+                )
+                runResults.append(runResult)
+            }
+
+            rows.append(ClassifierComparisonRow(
+                fileName: fileName,
+                filePath: path,
+                results: runResults
+            ))
+        }
+
+        return ClassifierComparisonReport(
+            config: config,
+            sourceDescription: fileSet.sourceDescription,
+            generatedAt: Date(),
+            backendsUsed: backendsUsed,
+            backendsSkipped: backendsSkipped,
+            rows: rows
+        )
+    }
+
+    /// Discover files and compare classifiers in one step.
+    func compareDiscoveredClassifiers(
+        config: EvaluationConfig,
+        backends: [ClassifierBackend]? = nil,
+        includeOpenAI: Bool = true
+    ) async throws -> (report: ClassifierComparisonReport, fileSet: EvaluationFileSet) {
+        let fileSet = try discoverFiles(config: config)
+        let report = await compareClassifiers(
+            fileSet: fileSet,
+            config: config,
+            backends: backends,
+            includeOpenAI: includeOpenAI
+        )
+        return (report, fileSet)
+    }
+
+    private func classifyWithBackend(
+        _ backend: ClassifierBackend,
+        metadata: FileMetadata,
+        config: EvaluationConfig,
+        fallbackClassifier: FallbackClassifier
+    ) async -> ClassifierRunResult {
+        var backendConfig = config
+        backendConfig.runLabel = backend.rawValue
+
+        let start = Date()
+        switch backend {
+        case .fallback:
+            let result = fallbackClassifier.classify(metadata)
+            return ClassifierRunResult(
+                backend: backend,
+                category: result.category,
+                subfolder: result.subfolder,
+                confidence: result.confidence,
+                method: result.method,
+                durationMs: Date().timeIntervalSince(start) * 1000,
+                reasoning: result.reasoning,
+                error: nil
+            )
+
+        case .ollama:
+            let manager = backendConfig.makeClassificationManager(llmService: backendConfig.makeOllamaService())
+            let result = await manager.classifyFile(metadata)
+            return makeRunResult(backend: backend, result: result, start: start, error: nil)
+
+        case .openai:
+            guard let apiKey = EvaluationConfig.resolvedOpenAIAPIKey() else {
+                return skippedResult(backend: backend)
+            }
+            let manager = backendConfig.makeClassificationManager(
+                llmService: OpenAILLMService(apiKey: apiKey, model: "gpt-4", maxTokens: 500)
+            )
+            let result = await manager.classifyFile(metadata)
+            return makeRunResult(backend: backend, result: result, start: start, error: nil)
+        }
+    }
+
+    private func makeRunResult(
+        backend: ClassifierBackend,
+        result: ClassificationResult,
+        start: Date,
+        error: String?
+    ) -> ClassifierRunResult {
+        ClassifierRunResult(
+            backend: backend,
+            category: result.category,
+            subfolder: result.subfolder,
+            confidence: result.confidence,
+            method: result.method,
+            durationMs: Date().timeIntervalSince(start) * 1000,
+            reasoning: result.reasoning,
+            error: error
+        )
+    }
+
+    private func skippedResult(backend: ClassifierBackend) -> ClassifierRunResult {
+        ClassifierRunResult(
+            backend: backend,
+            category: "",
+            subfolder: "",
+            confidence: 0,
+            method: .fallback,
+            durationMs: 0,
+            reasoning: nil,
+            error: "skipped"
+        )
+    }
+
     // MARK: - Ollama availability
 
     static func isOllamaAvailable(timeout: TimeInterval = 2.0) async -> Bool {

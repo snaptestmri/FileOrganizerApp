@@ -24,10 +24,8 @@ final class SubfolderHandlingTests: XCTestCase {
         // Initialize FileMover
         fileMover = FileMover(sourceFolder: tempDirectory)
         
-        // Initialize FileClassificationManager with MockLLMService
-        let mockLLM = MockLLMService.fast()
         classificationManager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: StubLLMService.fast(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()

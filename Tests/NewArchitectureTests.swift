@@ -150,14 +150,14 @@ final class NewArchitectureTests: XCTestCase {
     
     // MARK: - FileClassificationManager Tests
     
-    func testFileClassificationManagerWithMockLLM() async {
-        let mockLLM = MockLLMService()
-        mockLLM.mockResponse = """
+    func testFileClassificationManagerWithStubLLM() async {
+        let stub = StubLLMService.fast()
+        stub.fixedResponse = """
         {"category": "Finance", "subfolder": "Bills", "confidence": 0.95, "reasoning": "PDF file with invoice in name"}
         """
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: stub,
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -200,11 +200,8 @@ final class NewArchitectureTests: XCTestCase {
     }
     
     func testFileClassificationManagerFallbackOnLLMFailure() async {
-        let mockLLM = MockLLMService()
-        mockLLM.shouldFail = true
-        
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: FailingLLMService(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -248,13 +245,13 @@ final class NewArchitectureTests: XCTestCase {
     }
     
     func testFileClassificationManagerBatch() async {
-        let mockLLM = MockLLMService()
-        mockLLM.mockResponse = """
+        let stub = StubLLMService.fast()
+        stub.fixedResponse = """
         {"category": "Personal", "subfolder": "General", "confidence": 0.9, "reasoning": "default"}
         """
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: stub,
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()

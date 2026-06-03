@@ -8,6 +8,7 @@ Welcome to the File Organizer App documentation. This directory contains compreh
 Docs/
 ├── Architecture/          # System architecture and design
 │   ├── DESIGN_DOCUMENT.md
+│   ├── CLASSIFICATION_EVALUATION_DESIGN.md
 │   ├── ARCHITECTURE_BLOCKS.md
 │   ├── ARCHITECTURE_MIGRATION_STATUS.md
 │   └── SUBJECT_AND_LOCATION_FILING_DESIGN.md
@@ -17,6 +18,7 @@ Docs/
 │   ├── AutomatedTests-README.md
 │   ├── CLASSIFIER_TESTING_GUIDE.md
 │   ├── HOW_TO_TEST_CLASSIFIERS.md
+│   ├── EVALUATION.md
 │   ├── MANUAL_TEST_INSTRUCTIONS.md
 │   └── XCTEST_HTML_REPORT_SETUP.md
 │

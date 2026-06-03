@@ -22,7 +22,7 @@ Models/
 │   │   ├── OllamaLLMService.swift # Local Ollama implementation
 │   │   ├── OpenAILLMService.swift # OpenAI cloud implementation
 │   │   ├── AnthropicLLMService.swift # Anthropic Claude implementation
-│   │   └── MockLLMService.swift   # Mock service for testing
+│   │   └── FailingLLMService.swift # Forces rule-based fallback when LLM unavailable
 │   │
 │   ├── TelemetryService.swift    # Analytics and telemetry
 │   ├── ABTestingService.swift    # A/B testing framework
