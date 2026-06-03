@@ -85,6 +85,51 @@ UI and view-related tests covering:
 
 ## Running Tests
 
+### Allure Report (recommended — includes step-level detail)
+
+Runs tests via `xcodebuild` (produces `.xcresult`) and generates an Allure HTML report with pass/fail status for each step.
+
+```bash
+# Run all tests and generate Allure report
+./FileOrganizerApp/scripts/run_tests_with_allure.sh
+
+# Open the report in your browser after the run
+./FileOrganizerApp/scripts/run_tests_with_allure.sh --open
+
+# Run a specific test with report
+./FileOrganizerApp/scripts/run_tests_with_allure.sh --filter AIClassificationIntegrationTests/testEndToEndClassificationWorkflow --open
+
+# Or via npm (requires Node.js)
+npm run test:allure
+npm run test:allure:open
+```
+
+Report output: `allure-report/index.html`
+
+**Important:** Open the report with `npx allure open allure-report` (or `--open` on the script). Opening `index.html` directly in the browser often shows an empty report because the UI loads data over HTTP.
+
+**Regenerate without re-running tests** (if you already have `TestResults/TestResults.xcresult`):
+
+```bash
+./FileOrganizerApp/scripts/regenerate_allure_report.sh
+npx allure open allure-report
+```
+
+**Requirements:** Xcode (full install) and Node.js/npm for the Allure CLI.
+
+**Writing test steps:** Use `AllureStep` in integration tests. Each step appears in the Allure report with its own pass/fail status and optional result attachment:
+
+```swift
+AllureStep.run("Add keywords to store") {
+    keywordStore.add(keyword: "test", subfolder: "General", category: "Work")
+    XCTAssertEqual(keywordStore.keywords.count, 1)
+}
+
+try await AllureStep.runAsync("Classify files", block: { ... }, resultDescription: { results in
+    "Classified \(results.count) files"
+})
+```
+
 ### Using the Test Runner Script
 ```bash
 ./run_tests.sh
@@ -92,7 +137,8 @@ UI and view-related tests covering:
 
 ### Using Swift Package Manager
 ```bash
-swift test
+# Omit --disable-swift-testing only if you add @Test (Swift Testing) targets
+swift test --disable-swift-testing
 ```
 
 ### Running Specific Tests

@@ -10,3 +10,8 @@ DerivedData/
 
 # Local profile / secrets (if added later)
 *.env
+
+# Allure reporting
+node_modules/
+allure-report/
+TestResults/

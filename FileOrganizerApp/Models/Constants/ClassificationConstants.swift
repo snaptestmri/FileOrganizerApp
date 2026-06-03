@@ -8,72 +8,11 @@
 
 import Foundation
 
-// MARK: - Classification Mode
-
-/// Determines which taxonomy is used for classification.
-///
-/// - standard:      Three functional buckets based on file type (Media / Projects / Documents).
-///                  Best for general-purpose folder organisation.
-///
-/// - personalDomain: Seven life-domain buckets based on *purpose*, not file format.
-///                  Best for a personal home folder where the same .pdf can be a
-///                  tax record, a legal document, a resume, or a book — and needs
-///                  to land in a different place each time.
-///                  Priority chain: intent > temporal signals > filename keywords > extension.
-enum ClassificationMode: String, CaseIterable {
-    case standard       = "standard"
-    case personalDomain = "personal_domain"
-
-    private static let userDefaultsKey = "classification_mode"
-
-    /// Persisted classification mode; defaults to personal domain for home-folder use.
-    static var persisted: ClassificationMode {
-        get {
-            guard let raw = UserDefaults.standard.string(forKey: userDefaultsKey),
-                  let mode = ClassificationMode(rawValue: raw) else {
-                return .personalDomain
-            }
-            return mode
-        }
-        set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: userDefaultsKey)
-        }
-    }
-
-    var displayName: String {
-        switch self {
-        case .standard:       return "Standard (file type)"
-        case .personalDomain: return "Personal (life domain)"
-        }
-    }
-
-    var description: String {
-        switch self {
-        case .standard:
-            return "Sorts by file format: Media, Projects, Documents."
-        case .personalDomain:
-            return "Sorts by purpose: Career, Finance, Legal, Personal, Media, Projects. " +
-                   "Career includes job search, work, and learning (courses, university, books). " +
-                   "Ignores file type when purpose is clear from name, content, or context."
-        }
-    }
-}
-
 // MARK: - Classification Constants
 
 struct ClassificationConstants {
 
-    // MARK: - Standard Mode Taxonomy
-
-    static let validCategories = ["Media", "Projects", "Documents"]
-
-    static let validSubfolders: [String: [String]] = [
-        "Media": ["Photos", "Videos", "Audio", "Screenshots"],
-        "Projects": ["Code", "3D", "Design", "Assets", "Web"],
-        "Documents": ["General", "Presentations", "Invoices", "Financial", "Reports", "Receipts", "Personal", "Tax"]
-    ]
-
-    // MARK: - Personal Domain Mode Taxonomy
+    // MARK: - Life-Domain Taxonomy
     //
     // Categories are life domains, not file types. A PDF can land in Finance,
     // Legal, Career, or Personal depending on what it *is*, not how it's encoded.
@@ -253,23 +192,7 @@ struct ClassificationConstants {
         "apk", "ipa"
     ]
     
-    // MARK: - Helper Methods (Standard Mode)
-
-    static func getValidSubfolders(for category: String?) -> [String: [String]] {
-        if let category = category {
-            return [category: validSubfolders[category] ?? ["General"]]
-        }
-        return validSubfolders
-    }
-
-    static func isValidCategory(_ category: String) -> Bool {
-        return validCategories.contains(category)
-    }
-
-    static func isValidSubfolder(_ subfolder: String, for category: String) -> Bool {
-        return validSubfolders[category]?.contains(subfolder) ?? false
-    }
-
+    /// Extension-only hint for LLM pre-category (weak signal; intent overrides in filing).
     static func getCategoryForExtension(_ fileExtension: String) -> String? {
         let ext = fileExtension.lowercased()
 
@@ -284,8 +207,6 @@ struct ClassificationConstants {
         // They default to Documents/General if no content hints
         return nil
     }
-
-    // MARK: - Helper Methods (Personal Domain Mode)
 
     static func getPersonalDomainSubfolders(for category: String?) -> [String: [String]] {
         if let category = category {
@@ -486,27 +407,21 @@ struct ClassificationConstants {
     /// Fix common LLM mistakes (invented subfolders, wrong category for code files) before validation.
     static func normalizeLLMClassification(
         _ result: ClassificationResult,
-        metadata: FileMetadata,
-        mode: ClassificationMode
+        metadata: FileMetadata
     ) -> ClassificationResult {
         var category = result.category
         var subfolder = result.subfolder
         var reasoning = result.reasoning ?? ""
         let ext = metadata.fileExtension.lowercased()
-        let subfolderMap = mode == .personalDomain ? personalDomainSubfolders : validSubfolders
 
         func subfolders(for cat: String) -> [String] {
-            subfolderMap[cat] ?? []
-        }
-
-        func projectsCodeSubfolder() -> String {
-            mode == .personalDomain ? "Code" : (webExtensions.contains(ext) ? "Web" : "Code")
+            personalDomainSubfolders[cat] ?? []
         }
 
         var changed = false
 
         // Legacy: Education category folded into Career (subfolder names unchanged)
-        if mode == .personalDomain, category == "Education" {
+        if category == "Education" {
             category = "Career"
             if !subfolders(for: "Career").contains(subfolder) {
                 subfolder = matchesJobPrepFilename(metadata.fileName) ? "Job Prep" : "PM Courses"
@@ -516,20 +431,19 @@ struct ClassificationConstants {
 
         // Sublime/VS Code plugin packages are not app project roots
         if isEditorPackage(metadata.fileName, fileExtension: ext) {
-            if category != "Projects" || subfolder != projectsCodeSubfolder() {
+            if category != "Projects" || subfolder != "Code" {
                 category = "Projects"
-                subfolder = projectsCodeSubfolder()
+                subfolder = "Code"
                 changed = true
             }
         }
 
         // Stylesheets and code must not land in Media
         if isCodeOrWebExtension(ext) || textPreviewExtensions.contains(ext) {
-            let codeSub = projectsCodeSubfolder()
             if category == "Media" || !subfolders(for: category).contains(subfolder) {
-                if category != "Projects" || subfolder != codeSub {
+                if category != "Projects" || subfolder != "Code" {
                     category = "Projects"
-                    subfolder = codeSub
+                    subfolder = "Code"
                     changed = true
                 }
             }
@@ -541,7 +455,7 @@ struct ClassificationConstants {
         }
 
         // Career guides ≠ actual CVs — Resumes only for real resume files
-        if mode == .personalDomain, category == "Career", subfolder == "Resumes" {
+        if category == "Career", subfolder == "Resumes" {
             if metadata.detectedIntent == "job_prep" || matchesJobPrepFilename(metadata.fileName) {
                 subfolder = "Job Prep"
                 changed = true
@@ -551,83 +465,81 @@ struct ClassificationConstants {
             }
         }
 
-        if mode == .personalDomain {
-            // Identity requires real ID/passport signals — not prompt-example pattern matching
-            if category == "Personal", subfolder == "Identity",
-               !matchesIdentityFilename(metadata.fileName) {
-                if let intent = metadata.detectedIntent,
-                   let route = personalDomainRoute(for: intent), route.subfolder != "Identity" {
-                    category = route.category
-                    subfolder = route.subfolder
-                } else if metadata.detectedIntent == "offer_letter" {
-                    category = "Career"
-                    subfolder = "Work"
-                } else {
-                    subfolder = "General"
-                }
-                changed = true
+        // Identity requires real ID/passport signals — not prompt-example pattern matching
+        if category == "Personal", subfolder == "Identity",
+           !matchesIdentityFilename(metadata.fileName) {
+            if let intent = metadata.detectedIntent,
+               let route = personalDomainRoute(for: intent), route.subfolder != "Identity" {
+                category = route.category
+                subfolder = route.subfolder
+            } else if metadata.detectedIntent == "offer_letter" {
+                category = "Career"
+                subfolder = "Work"
+            } else {
+                subfolder = "General"
             }
+            changed = true
+        }
 
-            // eStmt / pay stubs are not tax returns
-            if category == "Finance", subfolder == "Taxes",
-               matchesBankStatementFilename(metadata.fileName),
-               !matchesTaxFilename(metadata.fileName) {
-                subfolder = "Bank Statements"
-                changed = true
-            }
+        // eStmt / pay stubs are not tax returns
+        if category == "Finance", subfolder == "Taxes",
+           matchesBankStatementFilename(metadata.fileName),
+           !matchesTaxFilename(metadata.fileName) {
+            subfolder = "Bank Statements"
+            changed = true
+        }
 
-            // PM/career guides misrouted to Personal/Health from noisy previews
-            if category == "Personal", subfolder == "Health",
-               matchesJobPrepFilename(metadata.fileName) {
+        // PM/career guides misrouted to Personal/Health from noisy previews
+        if category == "Personal", subfolder == "Health",
+           matchesJobPrepFilename(metadata.fileName) {
+            category = "Career"
+            subfolder = "Job Prep"
+            changed = true
+        }
+
+        // False "Screenshot" / Media when there is no temporal prefix
+        if category == "Media", subfolder == "Screenshots",
+           !matchesScreenshotFilename(metadata.fileName) {
+            if isCodeOrWebExtension(ext) || matchesBrowserArtifactFilename(metadata.fileName) {
+                category = "Projects"
+                subfolder = "Code"
+            } else if matchesJobPrepFilename(metadata.fileName) {
                 category = "Career"
                 subfolder = "Job Prep"
-                changed = true
+            } else if let intent = metadata.detectedIntent, let route = personalDomainRoute(for: intent) {
+                category = route.category
+                subfolder = route.subfolder
+            } else {
+                category = "Personal"
+                subfolder = "General"
             }
+            changed = true
+        }
 
-            // False "Screenshot" / Media when there is no temporal prefix
-            if category == "Media", subfolder == "Screenshots",
-               !matchesScreenshotFilename(metadata.fileName) {
-                if isCodeOrWebExtension(ext) || matchesBrowserArtifactFilename(metadata.fileName) {
-                    category = "Projects"
-                    subfolder = projectsCodeSubfolder()
-                } else if matchesJobPrepFilename(metadata.fileName) {
-                    category = "Career"
-                    subfolder = "Job Prep"
-                } else if let intent = metadata.detectedIntent, let route = personalDomainRoute(for: intent) {
-                    category = route.category
-                    subfolder = route.subfolder
-                } else {
-                    category = "Personal"
-                    subfolder = "General"
-                }
+        // Browser / ad / cache artifacts
+        if matchesBrowserArtifactFilename(metadata.fileName) {
+            category = "Projects"
+            subfolder = "Code"
+            changed = true
+        }
+
+        // JARs, dylibs, etc. inside app bundles are not Projects/Apps
+        if category == "Projects", subfolder == "Apps" {
+            if bundledArtifactExtensions.contains(ext)
+                || isEditorPackage(metadata.fileName, fileExtension: ext) {
+                subfolder = "Code"
                 changed = true
-            }
-
-            // Browser / ad / cache artifacts
-            if matchesBrowserArtifactFilename(metadata.fileName) {
-                category = "Projects"
-                subfolder = projectsCodeSubfolder()
+            } else if (archiveExtensions.contains(ext) || installerExtensions.contains(ext)),
+                      !siblingIndicatesProjectRoot(metadata.siblingFiles),
+                      metadata.detectedIntent != nil,
+                      let route = personalDomainRoute(for: metadata.detectedIntent!) {
+                category = route.category
+                subfolder = route.subfolder
                 changed = true
-            }
-
-            // JARs, dylibs, etc. inside app bundles are not Projects/Apps
-            if category == "Projects", subfolder == "Apps" {
-                if bundledArtifactExtensions.contains(ext)
-                    || isEditorPackage(metadata.fileName, fileExtension: ext) {
-                    subfolder = projectsCodeSubfolder()
-                    changed = true
-                } else if (archiveExtensions.contains(ext) || installerExtensions.contains(ext)),
-                          !siblingIndicatesProjectRoot(metadata.siblingFiles),
-                          metadata.detectedIntent != nil,
-                          let route = personalDomainRoute(for: metadata.detectedIntent!) {
-                    category = route.category
-                    subfolder = route.subfolder
-                    changed = true
-                } else if (archiveExtensions.contains(ext) || installerExtensions.contains(ext)),
-                          !siblingIndicatesProjectRoot(metadata.siblingFiles) {
-                    subfolder = "Scaffold"
-                    changed = true
-                }
+            } else if (archiveExtensions.contains(ext) || installerExtensions.contains(ext)),
+                      !siblingIndicatesProjectRoot(metadata.siblingFiles) {
+                subfolder = "Scaffold"
+                changed = true
             }
         }
 
@@ -650,14 +562,13 @@ struct ClassificationConstants {
             ]
             if inventedTechLabels.contains(lowerSub) {
                 category = "Projects"
-                subfolder = projectsCodeSubfolder()
+                subfolder = "Code"
                 changed = true
             }
         }
 
         // Trust pre-computed intent when it clearly contradicts a weak LLM guess
-        if mode == .personalDomain,
-           let intent = metadata.detectedIntent,
+        if let intent = metadata.detectedIntent,
            let route = personalDomainRoute(for: intent),
            result.confidence < 0.88 {
             let llmLooksWeak = (category == "Personal" && subfolder == "General")
@@ -674,16 +585,13 @@ struct ClassificationConstants {
         if !subfolders(for: category).contains(subfolder) {
             if isCodeOrWebExtension(ext) {
                 category = "Projects"
-                subfolder = projectsCodeSubfolder()
-            } else if mode == .personalDomain, category == "Personal" {
+                subfolder = "Code"
+            } else if category == "Personal" {
                 subfolder = "General"
             } else if let fallback = subfolders(for: category).first {
                 subfolder = fallback
-            } else if mode == .personalDomain {
-                category = "Personal"
-                subfolder = "General"
             } else {
-                category = "Documents"
+                category = "Personal"
                 subfolder = "General"
             }
             changed = true

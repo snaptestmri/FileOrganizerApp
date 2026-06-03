@@ -16,9 +16,9 @@ fi
 echo "🧹 Cleaning build directory..."
 rm -rf .build
 
-# Run tests
+# Run tests (XCTest only — skip empty Swift Testing runner summary)
 echo "🚀 Running tests..."
-swift test
+swift test --disable-swift-testing
 
 # Check if tests passed
 if [ $? -eq 0 ]; then

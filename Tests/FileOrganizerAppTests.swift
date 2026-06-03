@@ -221,22 +221,38 @@ final class FileOrganizerAppTests: XCTestCase {
     
     // MARK: - Integration Tests
     func testCompleteWorkflow() throws {
-        // 1. Add keywords to store
-        keywordStore.add(keyword: "test", subfolder: "Test", category: "Work")
-        keywordStore.add(keyword: "work", subfolder: "Work", category: "Work")
-        
-        XCTAssertEqual(keywordStore.keywords.count, 2)
-        
-        // 2. Create test files
-        let testFile = tempDirectory.appendingPathComponent("test_work_file.txt")
-        try "test content".write(to: testFile, atomically: true, encoding: .utf8)
-        
-        // 3. Run file mover
-        let fileMover = FileMover(sourceFolder: tempDirectory)
-        let results = try fileMover.runWithProgress(with: keywordStore.keywords) { _, _, _ in }
-        
-        XCTAssertGreaterThanOrEqual(results.processedFiles, 1)
-        XCTAssertGreaterThanOrEqual(results.movedFiles, 0)
+        AllureStep.run("Add keywords to store") {
+            keywordStore.add(keyword: "test", subfolder: "Test", category: "Work")
+            keywordStore.add(keyword: "work", subfolder: "Work", category: "Work")
+            XCTAssertEqual(keywordStore.keywords.count, 2)
+        }
+
+        let testFile = try AllureStep.run(
+            "Create test files",
+            block: {
+                let file = tempDirectory.appendingPathComponent("test_work_file.txt")
+                try "test content".write(to: file, atomically: true, encoding: .utf8)
+                return file
+            },
+            resultDescription: { file in
+                "Created file at \(file.path)"
+            }
+        )
+
+        try AllureStep.run(
+            "Run file mover and verify results",
+            block: {
+                let fileMover = FileMover(sourceFolder: tempDirectory)
+                let results = try fileMover.runWithProgress(with: keywordStore.keywords) { _, _, _ in }
+                XCTAssertGreaterThanOrEqual(results.processedFiles, 1)
+                XCTAssertGreaterThanOrEqual(results.movedFiles, 0)
+                _ = testFile
+                return results
+            },
+            resultDescription: { results in
+                "Processed \(results.processedFiles) file(s), moved \(results.movedFiles)"
+            }
+        )
     }
     
     // MARK: - Performance Tests
@@ -558,6 +574,7 @@ final class FileOrganizerAppTests: XCTestCase {
     
     func testKeywordTextFieldPerformance() {
         measure {
+            keywordStore.keywords.removeAll()
             for i in 0..<1000 {
                 let keyword = "keyword\(i)"
                 keywordStore.add(keyword: keyword, subfolder: "Performance", category: "Work")
@@ -568,10 +585,10 @@ final class FileOrganizerAppTests: XCTestCase {
     }
     
     func testKeywordTextFieldMemoryUsage() {
-        // Test with many large keywords
-        let largeKeyword = String(repeating: "a", count: 10000)
+        let largeKeyword = String(repeating: "a", count: 10_000)
         
         measure {
+            keywordStore.keywords.removeAll()
             for i in 0..<100 {
                 let keyword = "\(largeKeyword)\(i)"
                 keywordStore.add(keyword: keyword, subfolder: "Memory", category: "Work")
@@ -663,10 +680,7 @@ final class FileOrganizerAppTests: XCTestCase {
 extension FileOrganizerAppTests {
     
     func createIsolatedKeywordStore() -> KeywordStore {
-        // Create a temporary store that doesn't persist to the main file
-        let store = KeywordStore()
-        store.keywords = [] // Ensure it starts empty
-        return store
+        KeywordStore.isolatedForTests()
     }
     
     func createTestFile(name: String, content: String = "test content") throws -> URL {

@@ -581,6 +581,10 @@ struct FileMetadata: Codable {
         if let parent = parentFolder {
             description += "Location: .../\(parent)/\n"
         }
+
+        if folderDepth > 1 {
+            description += "Folder depth: \(folderDepth)\n"
+        }
         
         if !commonPatterns.isEmpty {
             description += "Filename structure hints (NOT subfolder names): \(commonPatterns.joined(separator: ", "))\n"

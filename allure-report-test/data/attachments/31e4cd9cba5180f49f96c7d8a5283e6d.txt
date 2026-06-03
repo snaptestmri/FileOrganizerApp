@@ -1,0 +1,2 @@
+receipt_2024.pdf -> Media/Photos
+invoice_2024.pdf -> Media/Photos

@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "test:allure": "./FileOrganizerApp/scripts/run_tests_with_allure.sh",
+    "test:allure:open": "./FileOrganizerApp/scripts/run_tests_with_allure.sh --open"
+  },
+  "devDependencies": {
+    "allure": "^3.9.0"
+  }
+}

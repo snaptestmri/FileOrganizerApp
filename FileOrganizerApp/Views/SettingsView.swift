@@ -15,7 +15,6 @@ struct SettingsView: View {
     @State private var anthropicTestResult: String? = nil
     @State private var showError = false
     @State private var errorMessage = ""
-    @State private var classificationMode: ClassificationMode = ClassificationMode.persisted
     @ObservedObject private var profileStore = ProfileStore.shared
     @State private var aliasesText: String = ""
     @State private var employersText: String = ""
@@ -28,10 +27,6 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: 24) {
                 headerSection
                 
-                Divider()
-                
-                classificationSection
-
                 Divider()
 
                 profileSection
@@ -77,36 +72,8 @@ struct SettingsView: View {
     private var headerSection: some View {
         SettingsPageHeader(
             title: "Settings",
-            subtitle: "Classification style, your profile, and AI service configuration."
+            subtitle: "Your profile and AI service configuration."
         )
-    }
-
-    // MARK: - Classification Section
-
-    private var classificationSection: some View {
-        SettingsSection(
-            icon: "folder.badge.gearshape",
-            iconColor: .blue,
-            title: "Classification Style",
-            subtitle: "Default for AI classification runs"
-        ) {
-            Picker("Style", selection: $classificationMode) {
-                ForEach(ClassificationMode.allCases, id: \.self) { mode in
-                    Text(mode.displayName).tag(mode)
-                }
-            }
-            .pickerStyle(.radioGroup)
-            .onChange(of: classificationMode) { _, newValue in
-                ClassificationMode.persisted = newValue
-            }
-
-            Text(classificationMode.description)
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .onAppear {
-            classificationMode = ClassificationMode.persisted
-        }
     }
 
     // MARK: - Profile Section
