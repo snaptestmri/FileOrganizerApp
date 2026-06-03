@@ -32,13 +32,15 @@ class ABTestingService {
     
     // MARK: - Public Methods
     
-    /// Create a new experiment
+    /// Create a new experiment (replaces any existing experiment with the same name)
     func createExperiment(
         name: String,
         variants: [ExperimentVariant],
         trafficAllocation: [String: Double]? = nil
     ) {
-        queue.async(flags: .barrier) {
+        queue.sync(flags: .barrier) {
+            self.removeExperiments(named: name)
+            
             let experiment = Experiment(
                 id: UUID().uuidString,
                 name: name,
@@ -60,8 +62,7 @@ class ABTestingService {
         guard isEnabled else { return nil }
         
         return queue.sync {
-            guard let experiment = activeExperiments.values.first(where: { $0.name == experimentName }),
-                  experiment.isActive else {
+            guard let experiment = activeExperiment(named: experimentName) else {
                 return nil
             }
             
@@ -92,7 +93,7 @@ class ABTestingService {
         guard isEnabled else { return }
         
         queue.async(flags: .barrier) {
-            guard let experiment = self.activeExperiments.values.first(where: { $0.name == experimentName }) else {
+            guard let experiment = self.activeExperiment(named: experimentName) else {
                 return
             }
             
@@ -114,7 +115,7 @@ class ABTestingService {
     /// Get experiment analysis
     func getExperimentAnalysis(experimentName: String) -> ExperimentAnalysis? {
         queue.sync {
-            guard let experiment = activeExperiments.values.first(where: { $0.name == experimentName }),
+            guard let experiment = activeExperiment(named: experimentName),
                   let results = experimentResults[experiment.id] else {
                 return nil
             }
@@ -130,20 +131,18 @@ class ABTestingService {
         }
     }
     
-    /// Stop an experiment
+    /// Stop an experiment and remove it from active tracking
     func stopExperiment(name: String) {
-        queue.async(flags: .barrier) {
-            if let experiment = self.activeExperiments.values.first(where: { $0.name == name }) {
-                self.activeExperiments[experiment.id]?.isActive = false
-                print("🛑 Stopped experiment: \(name)")
-            }
+        queue.sync(flags: .barrier) {
+            removeExperiments(named: name)
+            print("🛑 Stopped experiment: \(name)")
         }
     }
     
     /// Export experiment results
     func exportResults(experimentName: String) -> Data? {
         queue.sync {
-            guard let experiment = activeExperiments.values.first(where: { $0.name == experimentName }),
+            guard let experiment = activeExperiment(named: experimentName),
                   let results = experimentResults[experiment.id] else {
                 return nil
             }
@@ -165,6 +164,18 @@ class ABTestingService {
     }
     
     // MARK: - Private Methods
+    
+    private func activeExperiment(named name: String) -> Experiment? {
+        activeExperiments.values.first { $0.name == name && $0.isActive }
+    }
+    
+    private func removeExperiments(named name: String) {
+        let ids = activeExperiments.values.filter { $0.name == name }.map(\.id)
+        for id in ids {
+            activeExperiments.removeValue(forKey: id)
+            experimentResults.removeValue(forKey: id)
+        }
+    }
     
     private func setupDefaultExperiments() {
         // Experiment 1: Prompt Variants

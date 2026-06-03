@@ -7,9 +7,15 @@ final class ABTestingServiceTests: XCTestCase {
     
     override func setUpWithError() throws {
         try super.setUpWithError()
-        // Clear any existing experiments
         let service = ABTestingService.shared
         service.isEnabled = true
+        for experiment in service.getAllExperiments() {
+            service.stopExperiment(name: experiment.name)
+        }
+    }
+
+    private func uniqueExperimentName(_ base: String = "TestExperiment") -> String {
+        "\(base)_\(UUID().uuidString.prefix(8))"
     }
     
     override func tearDownWithError() throws {
@@ -134,6 +140,9 @@ final class ABTestingServiceTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -174,8 +183,9 @@ final class ABTestingServiceTests: XCTestCase {
             )
         ]
         
+        let experimentName = uniqueExperimentName()
         service.createExperiment(
-            name: "TestExperiment",
+            name: experimentName,
             variants: variants
         )
         
@@ -199,6 +209,9 @@ final class ABTestingServiceTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -207,7 +220,7 @@ final class ABTestingServiceTests: XCTestCase {
         // Record multiple results
         for i in 0..<10 {
             service.recordResult(
-                experimentName: "TestExperiment",
+                experimentName: experimentName,
                 variantId: i % 2 == 0 ? "variant_a" : "variant_b",
                 success: true,
                 confidence: 0.8 + Double(i) * 0.02,
@@ -216,10 +229,10 @@ final class ABTestingServiceTests: XCTestCase {
             )
         }
         
-        // Give it a moment to process
+        // Give async recordResult calls time to finish
         Thread.sleep(forTimeInterval: 0.2)
         
-        let analysis = service.getExperimentAnalysis(experimentName: "TestExperiment")
+        let analysis = service.getExperimentAnalysis(experimentName: experimentName)
         XCTAssertNotNil(analysis)
         XCTAssertEqual(analysis?.totalSamples, 10)
         XCTAssertNotNil(analysis?.variantAnalyses)
@@ -286,6 +299,9 @@ final class ABTestingServiceTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -334,8 +350,9 @@ final class ABTestingServiceTests: XCTestCase {
             "variant_b": 0.3
         ]
         
+        let experimentName = uniqueExperimentName("TrafficTest")
         service.createExperiment(
-            name: "TestExperiment",
+            name: experimentName,
             variants: variants,
             trafficAllocation: trafficAllocation
         )
@@ -345,7 +362,7 @@ final class ABTestingServiceTests: XCTestCase {
         var variantBCount = 0
         
         for _ in 0..<100 {
-            if let variant = service.getVariant(experimentName: "TestExperiment") {
+            if let variant = service.getVariant(experimentName: experimentName) {
                 if variant.id == "variant_a" {
                     variantACount += 1
                 } else if variant.id == "variant_b" {

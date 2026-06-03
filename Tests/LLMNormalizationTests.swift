@@ -56,8 +56,7 @@ final class LLMNormalizationTests: XCTestCase {
         )
         return ClassificationConstants.normalizeLLMClassification(
             result,
-            metadata: metadata(fileName: fileName, ext: ext, intent: intent),
-            mode: .personalDomain
+            metadata: metadata(fileName: fileName, ext: ext, intent: intent)
         )
     }
 

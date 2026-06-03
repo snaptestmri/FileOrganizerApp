@@ -25,7 +25,7 @@ final class SubfolderHandlingTests: XCTestCase {
         fileMover = FileMover(sourceFolder: tempDirectory)
         
         // Initialize FileClassificationManager with MockLLMService
-        let mockLLM = MockLLMService()
+        let mockLLM = MockLLMService.fast()
         classificationManager = FileClassificationManager(
             llmService: mockLLM,
             telemetryService: TelemetryService.shared,
@@ -254,8 +254,8 @@ final class SubfolderHandlingTests: XCTestCase {
         let promptBuilder = ClassificationPromptBuilder()
         let prompt = promptBuilder.buildPrompt(metadata: metadata, preCategory: "Documents")
         
-        // Prompt should include parent folder context
-        XCTAssertTrue(prompt.contains("Parent Folder"))
+        // Personal-domain prompt includes folder context via metadata description
+        XCTAssertTrue(prompt.contains("Location:"))
         XCTAssertTrue(prompt.contains("Financial"))
     }
     
@@ -278,7 +278,7 @@ final class SubfolderHandlingTests: XCTestCase {
         let prompt = promptBuilder.buildPrompt(metadata: metadata, preCategory: "Documents")
         
         // Prompt should include sibling files
-        XCTAssertTrue(prompt.contains("Sibling Files"))
+        XCTAssertTrue(prompt.contains("Siblings:"))
         XCTAssertTrue(prompt.contains("report2.pdf"))
     }
     
@@ -301,45 +301,54 @@ final class SubfolderHandlingTests: XCTestCase {
         
         // Prompt should include depth information if > 1
         if metadata.folderDepth > 1 {
-            XCTAssertTrue(prompt.contains("depth:"))
+            XCTAssertTrue(prompt.contains("Folder depth:"))
         }
     }
     
     // MARK: - Integration Tests
     
     func testEndToEndSubfolderClassification() async throws {
-        // Create realistic folder structure
-        let financialFolder = tempDirectory.appendingPathComponent("Financial")
-        let invoiceFile = financialFolder.appendingPathComponent("invoice_2024.pdf")
-        let receiptFile = financialFolder.appendingPathComponent("receipt_2024.pdf")
-        
-        try FileManager.default.createDirectory(at: financialFolder, withIntermediateDirectories: true)
-        try "invoice content".write(to: invoiceFile, atomically: true, encoding: .utf8)
-        try "receipt content".write(to: receiptFile, atomically: true, encoding: .utf8)
-        
-        let mover = AIClassifierMover(
-            sourceFolder: tempDirectory,
-            classificationManager: classificationManager
-        )
-        
-        var classifications: [(FileMetadata, ClassificationResult, OrganizeDestination)] = []
-        let results = try await mover.runWithProgress(
-            progressCallback: { _, _, _, _ in },
-            classificationCallback: { metadata, result, destination in
-                classifications.append((metadata, result, destination))
+        try await AllureStep.runAsync("Create financial folder with test files") { [self] in
+            let financialFolder = tempDirectory.appendingPathComponent("Financial")
+            let invoiceFile = financialFolder.appendingPathComponent("invoice_2024.pdf")
+            let receiptFile = financialFolder.appendingPathComponent("receipt_2024.pdf")
+
+            try FileManager.default.createDirectory(at: financialFolder, withIntermediateDirectories: true)
+            try "invoice content".write(to: invoiceFile, atomically: true, encoding: .utf8)
+            try "receipt content".write(to: receiptFile, atomically: true, encoding: .utf8)
+        }
+
+        let classifications = try await AllureStep.runAsync(
+            "Run AI classifier mover on subfolder files",
+            block: { [self] in
+                let mover = AIClassifierMover(
+                    sourceFolder: self.tempDirectory,
+                    classificationManager: self.classificationManager
+                )
+
+                var classifications: [(FileMetadata, ClassificationResult, OrganizeDestination)] = []
+                let results = try await mover.runWithProgress(
+                    progressCallback: { _, _, _, _ in },
+                    classificationCallback: { metadata, result, destination in
+                        classifications.append((metadata, result, destination))
+                    }
+                )
+
+                XCTAssertGreaterThan(results.processedFiles, 0)
+                XCTAssertGreaterThan(classifications.count, 0)
+                return classifications
+            },
+            resultDescription: { (items: [(FileMetadata, ClassificationResult, OrganizeDestination)]) in
+                items.map { "\($0.0.fileName) -> \($0.1.category)/\($0.1.subfolder)" }
+                    .joined(separator: "\n")
             }
         )
-        
-        // Should classify files from subfolder
-        XCTAssertGreaterThan(results.processedFiles, 0)
-        XCTAssertGreaterThan(classifications.count, 0)
-        
-        // Verify folder context was used
-        let invoiceClassification = classifications.first { $0.0.fileName == "invoice_2024.pdf" }
-        XCTAssertNotNil(invoiceClassification)
-        
-        // Verify metadata includes parent folder
-        XCTAssertEqual(invoiceClassification?.0.parentFolder, "Financial")
+
+        try await AllureStep.runAsync("Verify folder context influenced classification") {
+            let invoiceClassification = classifications.first { $0.0.fileName == "invoice_2024.pdf" }
+            XCTAssertNotNil(invoiceClassification)
+            XCTAssertEqual(invoiceClassification?.0.parentFolder, "Financial")
+        }
     }
     
     func testFolderContextInfluencesClassification() async throws {

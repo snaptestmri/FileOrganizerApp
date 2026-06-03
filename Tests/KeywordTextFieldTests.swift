@@ -328,6 +328,7 @@ final class KeywordTextFieldTests: XCTestCase {
     // MARK: - Performance Tests
     func testKeywordTextFieldPerformance() {
         measure {
+            keywordStore.keywords.removeAll()
             for i in 0..<1000 {
                 let keyword = "performance\(i)"
                 keywordStore.add(keyword: keyword, subfolder: "Performance", category: "Work")
@@ -338,10 +339,10 @@ final class KeywordTextFieldTests: XCTestCase {
     }
     
     func testKeywordTextFieldMemoryUsage() {
-        // Test with many large keywords
-        let largeKeyword = String(repeating: "a", count: 10000)
+        let largeKeyword = String(repeating: "a", count: 10_000)
         
         measure {
+            keywordStore.keywords.removeAll()
             for i in 0..<100 {
                 let keyword = "\(largeKeyword)\(i)"
                 keywordStore.add(keyword: keyword, subfolder: "Memory", category: "Work")
@@ -355,22 +356,24 @@ final class KeywordTextFieldTests: XCTestCase {
         // Test concurrent access to keyword store
         let expectation = XCTestExpectation(description: "Concurrent keyword additions")
         let queue = DispatchQueue(label: "test.queue", attributes: .concurrent)
+        let group = DispatchGroup()
         
         let keywords = Array(0..<100).map { "concurrent\($0)" }
         
         for keyword in keywords {
+            group.enter()
             queue.async {
                 self.keywordStore.add(keyword: keyword, subfolder: "Concurrent", category: "Work")
+                group.leave()
             }
         }
         
-        queue.async {
+        group.notify(queue: .main) {
             expectation.fulfill()
         }
         
         wait(for: [expectation], timeout: 5.0)
         
-        // Should have all keywords added (though order may vary)
         XCTAssertEqual(keywordStore.keywords.count, keywords.count)
     }
     
@@ -585,10 +588,7 @@ final class KeywordTextFieldTests: XCTestCase {
     
     // MARK: - Test Helpers
     private func createIsolatedKeywordStore() -> KeywordStore {
-        // Create a temporary store that doesn't persist to the main file
-        let store = KeywordStore()
-        store.keywords = [] // Ensure it starts empty
-        return store
+        KeywordStore.isolatedForTests()
     }
 }
 

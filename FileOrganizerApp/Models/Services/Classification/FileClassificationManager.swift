@@ -23,11 +23,6 @@ class FileClassificationManager {
     var enableTelemetry: Bool = true
     var useFallbackOnFailure: Bool = true
 
-    /// Switch between standard (file-type) and personal domain (life-domain) taxonomy.
-    var classificationMode: ClassificationMode = .standard {
-        didSet { promptBuilder.classificationMode = classificationMode }
-    }
-    
     // MARK: - Initialization
     
     init(
@@ -107,7 +102,7 @@ class FileClassificationManager {
         // Fallback to rule-based classification if LLM fails
         if result == nil && useFallbackOnFailure {
             print("⚡ Using fallback classifier for: \(metadata.fileName)")
-            result = fallbackClassifier.classify(metadata, mode: classificationMode)
+            result = fallbackClassifier.classify(metadata)
             classificationMethod = .fallback
             if let result {
                 let reason = result.reasoning ?? "(no reasoning provided)"
@@ -129,7 +124,7 @@ class FileClassificationManager {
         // If all else fails, return a default classification
         guard let finalResult = result else {
             let defaultResult = ClassificationResult(
-                category: "Documents",
+                category: "Personal",
                 subfolder: "General",
                 confidence: 0.3,
                 reasoning: "Default fallback classification",
@@ -192,8 +187,7 @@ class FileClassificationManager {
         
         let normalized = ClassificationConstants.normalizeLLMClassification(
             result,
-            metadata: metadata,
-            mode: classificationMode
+            metadata: metadata
         )
         if normalized.category != result.category || normalized.subfolder != result.subfolder {
             print("↪️ \(metadata.fileName): corrected \(result.category)/\(result.subfolder) → \(normalized.category)/\(normalized.subfolder)")
@@ -254,21 +248,12 @@ class FileClassificationManager {
     
     /// Validate classification result
     private func validateClassificationResult(_ result: ClassificationResult) -> Bool {
-        let validCategories = classificationMode == .personalDomain
-            ? ClassificationConstants.personalDomainCategories
-            : ClassificationConstants.validCategories
-
-        // Check category is valid
-        guard validCategories.contains(result.category) else {
+        guard ClassificationConstants.personalDomainCategories.contains(result.category) else {
             print("⚠️ Invalid category: \(result.category)")
             return false
         }
 
-        // Check subfolder is valid for the category
-        let subfolderMap = classificationMode == .personalDomain
-            ? ClassificationConstants.personalDomainSubfolders
-            : ClassificationConstants.validSubfolders
-        let validSubfolders = subfolderMap[result.category] ?? []
+        let validSubfolders = ClassificationConstants.personalDomainSubfolders[result.category] ?? []
         guard validSubfolders.contains(result.subfolder) else {
             print("⚠️ Invalid subfolder '\(result.subfolder)' for category '\(result.category)'")
             return false
@@ -295,7 +280,7 @@ class FileClassificationManager {
 
 // MARK: - Classification Method
 
-enum ClassificationMethod: String, Codable {
+enum ClassificationMethod: String, Codable, Equatable {
     case llm = "llm"
     case fallback = "fallback"
     case hybrid = "hybrid"

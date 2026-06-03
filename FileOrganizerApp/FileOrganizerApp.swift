@@ -41,6 +41,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        UserDefaults.standard.removeObject(forKey: "classification_mode")
+
         #if DEBUG
         print("🚀 App launched")
         #endif

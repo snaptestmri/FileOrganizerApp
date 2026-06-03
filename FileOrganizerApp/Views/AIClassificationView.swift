@@ -6,7 +6,6 @@ struct AIClassificationView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var classificationManager: FileClassificationManager?
     @State private var selectedServiceType: ServiceType = .ollama
-    @State private var classificationMode: ClassificationMode = ClassificationMode.persisted
     @State private var isRunning = false
     @State private var progress = 0.0
     @State private var currentFile = ""
@@ -100,25 +99,6 @@ struct AIClassificationView: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Classification Style")
-                        .font(.headline)
-
-                    VStack(spacing: 8) {
-                        ForEach(ClassificationMode.allCases, id: \.self) { mode in
-                            ServiceOption(
-                                title: mode.displayName,
-                                description: mode.description,
-                                isSelected: classificationMode == mode,
-                                isAvailable: true
-                            ) {
-                                classificationMode = mode
-                                ClassificationMode.persisted = mode
-                                updateClassificationManager()
-                            }
-                        }
-                    }
-                }
             }
             
             // Progress Section
@@ -304,7 +284,6 @@ struct AIClassificationView: View {
             }
         }
         .onAppear {
-            classificationMode = ClassificationMode.persisted
             // Initialize with best available service
             if checkOllamaAvailable() {
                 selectedServiceType = .ollama
@@ -443,7 +422,6 @@ struct AIClassificationView: View {
         let promptBuilder = ClassificationPromptBuilder()
         promptBuilder.userProfile = profileStore.profile
         promptBuilder.knownPeople = profileStore.knownPeople
-        promptBuilder.classificationMode = classificationMode
 
         classificationManager = FileClassificationManager(
             llmService: llmService,
@@ -452,7 +430,6 @@ struct AIClassificationView: View {
             promptBuilder: promptBuilder
         )
         classificationManager?.useFallbackOnFailure = true
-        classificationManager?.classificationMode = classificationMode
     }
     
     private func startClassification() {
@@ -472,7 +449,6 @@ struct AIClassificationView: View {
         
         addActivity("Starting AI classification...", type: .info)
         addActivity("Using service: \(selectedServiceType)", type: .info)
-        addActivity("Style: \(classificationMode.displayName)", type: .info)
         if profileStore.profile.hasIdentity {
             addActivity("Profile: \(profileStore.profile.fullName)", type: .info)
             if let region = profileStore.profile.homeRegion, !region.isEmpty {

@@ -7,7 +7,7 @@ echo "=================================="
 echo ""
 
 # Run the tuning test
-swift test --filter QuickTuningTest.testQuickTuning
+swift test --disable-swift-testing --filter QuickTuningTestMinimal.testQuickTuningSimple
 
 # Check if test results exist
 if [ ! -d ".build/test-results" ]; then

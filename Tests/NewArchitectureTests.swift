@@ -45,6 +45,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 1,
             commonPatterns: ["contains_date"],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: "invoice",
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -52,9 +55,9 @@ final class NewArchitectureTests: XCTestCase {
         
         let result = classifier.classify(metadata)
         
-        XCTAssertEqual(result.category, "Documents")
-        XCTAssertEqual(result.subfolder, "Invoices")
-        XCTAssertEqual(result.method, .fallback)
+        XCTAssertEqual(result.category, "Finance")
+        XCTAssertEqual(result.subfolder, "Bills")
+        XCTAssertEqual(result.method, ClassificationMethod.fallback)
         XCTAssertGreaterThan(result.confidence, 0.0)
         XCTAssertNotNil(result.reasoning)
     }
@@ -81,6 +84,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -90,7 +96,7 @@ final class NewArchitectureTests: XCTestCase {
         
         XCTAssertEqual(result.category, "Media")
         XCTAssertEqual(result.subfolder, "Photos")
-        XCTAssertEqual(result.method, .fallback)
+        XCTAssertEqual(result.method, ClassificationMethod.fallback)
     }
     
     func testFallbackClassifier3DModel() {
@@ -115,6 +121,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -123,8 +132,8 @@ final class NewArchitectureTests: XCTestCase {
         let result = classifier.classify(metadata)
         
         XCTAssertEqual(result.category, "Projects")
-        XCTAssertEqual(result.subfolder, "3D")
-        XCTAssertEqual(result.method, .fallback)
+        XCTAssertEqual(result.subfolder, "Code")
+        XCTAssertEqual(result.method, ClassificationMethod.fallback)
     }
     
     func testFallbackClassifierDetermineCategoryFromExtension() {
@@ -144,7 +153,7 @@ final class NewArchitectureTests: XCTestCase {
     func testFileClassificationManagerWithMockLLM() async {
         let mockLLM = MockLLMService()
         mockLLM.mockResponse = """
-        {"category": "Documents", "subfolder": "Invoices", "confidence": 0.95, "reasoning": "PDF file with invoice in name"}
+        {"category": "Finance", "subfolder": "Bills", "confidence": 0.95, "reasoning": "PDF file with invoice in name"}
         """
         
         let manager = FileClassificationManager(
@@ -174,6 +183,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: "invoice",
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -181,9 +193,9 @@ final class NewArchitectureTests: XCTestCase {
         
         let result = await manager.classifyFile(metadata)
         
-        XCTAssertEqual(result.category, "Documents")
-        XCTAssertEqual(result.subfolder, "Invoices")
-        XCTAssertEqual(result.method, .llm)
+        XCTAssertEqual(result.category, "Finance")
+        XCTAssertEqual(result.subfolder, "Bills")
+        XCTAssertEqual(result.method, ClassificationMethod.llm)
         XCTAssertGreaterThan(result.confidence, 0.0)
     }
     
@@ -219,6 +231,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -229,13 +244,13 @@ final class NewArchitectureTests: XCTestCase {
         // Should fallback to rule-based classification
         XCTAssertEqual(result.category, "Media")
         XCTAssertEqual(result.subfolder, "Photos")
-        XCTAssertEqual(result.method, .fallback)
+        XCTAssertEqual(result.method, ClassificationMethod.fallback)
     }
     
     func testFileClassificationManagerBatch() async {
         let mockLLM = MockLLMService()
         mockLLM.mockResponse = """
-        {"category": "Documents", "subfolder": "General", "confidence": 0.9, "reasoning": "default"}
+        {"category": "Personal", "subfolder": "General", "confidence": 0.9, "reasoning": "default"}
         """
         
         let manager = FileClassificationManager(
@@ -266,6 +281,9 @@ final class NewArchitectureTests: XCTestCase {
                 siblingFiles: nil,
                 folderDepth: 0,
                 commonPatterns: [],
+                isProjectDirectory: false,
+                hasTemporalName: false,
+                detectedIntent: nil,
                 author: nil,
                 keywords: nil,
                 whereFrom: nil
@@ -290,6 +308,9 @@ final class NewArchitectureTests: XCTestCase {
                 siblingFiles: nil,
                 folderDepth: 0,
                 commonPatterns: [],
+                isProjectDirectory: false,
+                hasTemporalName: false,
+                detectedIntent: nil,
                 author: nil,
                 keywords: nil,
                 whereFrom: nil
@@ -331,6 +352,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -382,6 +406,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -424,6 +451,9 @@ final class NewArchitectureTests: XCTestCase {
                 siblingFiles: nil,
                 folderDepth: 0,
                 commonPatterns: [],
+                isProjectDirectory: false,
+                hasTemporalName: false,
+                detectedIntent: nil,
                 author: nil,
                 keywords: nil,
                 whereFrom: nil
@@ -472,6 +502,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -481,7 +514,8 @@ final class NewArchitectureTests: XCTestCase {
         
         XCTAssertFalse(prompt.isEmpty)
         XCTAssertTrue(prompt.contains("invoice.pdf"))
-        XCTAssertTrue(prompt.contains("Documents"))
+        XCTAssertTrue(prompt.contains("TAXONOMY"))
+        XCTAssertTrue(prompt.contains("Finance"))
     }
     
     func testClassificationPromptBuilderConcise() {
@@ -508,6 +542,9 @@ final class NewArchitectureTests: XCTestCase {
             siblingFiles: nil,
             folderDepth: 0,
             commonPatterns: [],
+            isProjectDirectory: false,
+            hasTemporalName: false,
+            detectedIntent: nil,
             author: nil,
             keywords: nil,
             whereFrom: nil
@@ -522,18 +559,18 @@ final class NewArchitectureTests: XCTestCase {
     // MARK: - ClassificationConstants Tests
     
     func testClassificationConstantsValidCategories() {
-        XCTAssertTrue(ClassificationConstants.isValidCategory("Media"))
-        XCTAssertTrue(ClassificationConstants.isValidCategory("Projects"))
-        XCTAssertTrue(ClassificationConstants.isValidCategory("Documents"))
-        // Archive category removed - archives are classified by content
-        XCTAssertFalse(ClassificationConstants.isValidCategory("Invalid"))
+        XCTAssertTrue(ClassificationConstants.isValidPersonalCategory("Career"))
+        XCTAssertTrue(ClassificationConstants.isValidPersonalCategory("Finance"))
+        XCTAssertTrue(ClassificationConstants.isValidPersonalCategory("Media"))
+        XCTAssertFalse(ClassificationConstants.isValidPersonalCategory("Documents"))
+        XCTAssertFalse(ClassificationConstants.isValidPersonalCategory("Invalid"))
     }
     
     func testClassificationConstantsValidSubfolders() {
-        XCTAssertTrue(ClassificationConstants.isValidSubfolder("Photos", for: "Media"))
-        XCTAssertTrue(ClassificationConstants.isValidSubfolder("Code", for: "Projects"))
-        XCTAssertTrue(ClassificationConstants.isValidSubfolder("Invoices", for: "Documents"))
-        XCTAssertFalse(ClassificationConstants.isValidSubfolder("Invalid", for: "Media"))
+        XCTAssertTrue(ClassificationConstants.isValidPersonalSubfolder("Resumes", for: "Career"))
+        XCTAssertTrue(ClassificationConstants.isValidPersonalSubfolder("Code", for: "Projects"))
+        XCTAssertTrue(ClassificationConstants.isValidPersonalSubfolder("Taxes", for: "Finance"))
+        XCTAssertFalse(ClassificationConstants.isValidPersonalSubfolder("Invoices", for: "Finance"))
     }
     
     func testClassificationConstantsGetCategoryForExtension() {
