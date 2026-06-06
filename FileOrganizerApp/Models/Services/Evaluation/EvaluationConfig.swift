@@ -82,6 +82,16 @@ struct EvaluationConfig: Equatable, Codable {
         return config
     }
 
+    /// Config for harness/integration tests: reads env vars, then `defaultFolder` when no folder is set.
+    static func forHarnessTests(customize: ((inout EvaluationConfig) -> Void)? = nil) -> EvaluationConfig {
+        var config = fromEnvironment()
+        if config.folderPath == nil {
+            config.folderPath = (defaultFolder as NSString).expandingTildeInPath
+        }
+        customize?(&config)
+        return config
+    }
+
     /// Whether Ollama-backed evaluation is explicitly requested (for future gated tests).
     static var useOllamaFromEnvironment: Bool {
         guard let value = ProcessInfo.processInfo.environment["EVAL_USE_OLLAMA"] else {

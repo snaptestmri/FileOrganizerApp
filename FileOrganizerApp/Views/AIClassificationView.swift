@@ -402,21 +402,16 @@ struct AIClassificationView: View {
             if let apiKey = UserDefaults.standard.string(forKey: "openai_api_key"), !apiKey.isEmpty {
                 llmService = OpenAILLMService(apiKey: apiKey)
             } else {
-                // Fallback to Mock if no API key
-                llmService = MockLLMService()
+                llmService = FailingLLMService(errorMessage: "OpenAI API key not configured")
             }
         case .anthropic:
             if let apiKey = UserDefaults.standard.string(forKey: "anthropic_api_key"), !apiKey.isEmpty {
                 llmService = AnthropicLLMService(apiKey: apiKey)
             } else {
-                // Fallback to Mock if no API key
-                llmService = MockLLMService()
+                llmService = FailingLLMService(errorMessage: "Anthropic API key not configured")
             }
         case .fallback:
-            // Use MockLLM that always fails to force fallback
-            let mockLLM = MockLLMService()
-            mockLLM.shouldFail = true
-            llmService = mockLLM
+            llmService = FailingLLMService()
         }
         
         let promptBuilder = ClassificationPromptBuilder()

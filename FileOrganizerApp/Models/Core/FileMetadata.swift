@@ -262,19 +262,15 @@ struct FileMetadata: Codable {
         return false
     }
 
-    /// Infers a specific life-domain intent from the filename and parent folder name
-    /// using keyword rules. Returns nil when intent is genuinely ambiguous.
-    ///
-    /// This encodes the "intent over name" principle: we look at what the file *is*,
-    /// not what it happens to be called. The rules are ordered from most specific to
-    /// most general to avoid false positives.
-    private static func detectIntent(from fileName: String, parentFolder: String) -> String? {
-        let name  = fileName.lowercased()
-        let folder = parentFolder.lowercased()
+    /// Infers life-domain intent from arbitrary text (filename, content preview, etc.).
+    /// Set `treatAsFilename` when `text` is a basename so temporal-prefix rules apply.
+    static func detectIntent(in text: String, parentFolder: String? = nil, treatAsFilename: Bool = false) -> String? {
+        let name = text.lowercased()
+        let folder = parentFolder?.lowercased() ?? ""
 
         // --- Career (job prep before resume — guides are not CVs) ---
-        if ClassificationConstants.matchesJobPrepFilename(fileName) { return "job_prep" }
-        if ClassificationConstants.matchesActualResumeFilename(fileName) { return "resume" }
+        if ClassificationConstants.matchesJobPrepFilename(text) { return "job_prep" }
+        if treatAsFilename, ClassificationConstants.matchesActualResumeFilename(text) { return "resume" }
         if matchesAny(name, ["cover letter", "coverletter"]) { return "cover_letter" }
         if matchesAny(name, ["performance", "year end", "yearend", "appraisal", "evaluation"]) { return "performance_review" }
         if matchesAny(name, ["offer letter", "employment letter", "employment agreement"]) { return "offer_letter" }
@@ -285,8 +281,8 @@ struct FileMetadata: Codable {
         if matchesAny(name, ["exam_completion", "certificate", "certification", "badge", "credential"]) { return "certification" }
 
         // --- Finance ---
-        if ClassificationConstants.matchesTaxFilename(fileName) { return "tax" }
-        if ClassificationConstants.matchesBankStatementFilename(fileName) { return "bank_statement" }
+        if ClassificationConstants.matchesTaxFilename(text) { return "tax" }
+        if ClassificationConstants.matchesBankStatementFilename(text) { return "bank_statement" }
         if matchesAny(name, ["invoice", "amount due", "bill to"]) { return "invoice" }
         if matchesAny(name, ["receipt", "order confirmation", "purchase"]) { return "receipt" }
         if matchesAny(name, [
@@ -296,19 +292,36 @@ struct FileMetadata: Codable {
         if matchesAny(name, ["remitly", "wire transfer", "transfer activity"]) { return "bank_statement" }
 
         // --- Legal ---
-        if matchesAny(name, ["visa", "i-94", "i94", "passport", "ead", "work permit", "h1b", "h-1b", "green card"]) { return "immigration" }
+        if matchesAny(name, ["visa", "i-94", "i94", "passport", "ead", "work permit", "h1b", "h-1b", "green card", "consulate", "embassy"]) { return "immigration" }
         if matchesAny(name, ["probate", "estate", "distribution", "administrator", "petition"]) { return "probate" }
         if matchesAny(name, ["grievance", "court", "case#", "legal notice", "subpoena", "deposition"]) { return "court_case" }
         if matchesAny(name, ["affidavit", "declaration", "evidence of funds"]) { return "evidence" }
-        if matchesAny(name, ["nda", "non-disclosure", "agreement", "contract", "lease", "rental agreement"]) { return "contract" }
+        if matchesAny(name, ["non-disclosure", "rental agreement"]) { return "contract" }
+        if matchesAnyWord(name, ["nda", "agreement", "contract", "lease"]) { return "contract" }
 
         // --- Personal / Health ---
         if matchesAny(name, ["health", "medical", "doctor", "appointment", "lab result", "diagnosis", "rx", "prescription", "healthsummary", "peryourhealth", "medications", "1095-b", "form 1095"]) { return "health" }
         if matchesAny(name, ["insurance", "policy", "geico", "aetna", "anthem", "cigna", "uhc"]) { return "insurance" }
-        if ClassificationConstants.matchesIdentityFilename(fileName) { return "identity" }
+        if ClassificationConstants.matchesIdentityFilename(text) { return "identity" }
         if matchesAny(name, ["rent", "lease", "apartment", "landlord", "renter"]) { return "rent" }
 
-        // --- Career / learning (courses & university under Career) ---
+        // --- Career / learning (body text often names the topic without filename hints) ---
+        if matchesAny(name, [
+            "wireframe", "wireframes", "a/b test", "a/b testing", "a_b test", "a_b testing",
+            "ab test", "split test", "experimentation", "product manager", "product management"
+        ]) {
+            if matchesAny(name, ["guide", "handbook", "playbook", "primer", "tutorial", "ultimate guide", "unofficial guide"]) {
+                return "job_prep"
+            }
+            if matchesAny(name, ["book", "chapter", "ebook", "e-book", "isbn", "edition", "textbook"]) {
+                return "book"
+            }
+            if matchesAny(name, ["course", "cohort", "lecture", "module", "lesson", "curriculum", "syllabus"]) {
+                return "course"
+            }
+            return "book"
+        }
+
         if matchesAny(name, ["transcript", "scholarship", "admission", "acceptance", "degree", "gpa", "university"]) { return "university" }
         if matchesAny(name, [
             "course", "lecture", "slides", "syllabus", "pm school", "productschool",
@@ -317,9 +330,9 @@ struct FileMetadata: Codable {
         if matchesAny(name, ["textbook", "ebook", "e-book", "reading list"]) { return "book" }
         if matchesAny(name, ["class notes", "lecture notes", "study notes", "study guide"]) { return "notes" }
 
-        // --- Temporal / Media (checked last — these are structural, not semantic) ---
-        if ClassificationConstants.hasTemporalPrefix(fileName) {
-            let ext = (fileName as NSString).pathExtension.lowercased()
+        // --- Temporal / Media (filename-only — not structural signals in document body) ---
+        if treatAsFilename, ClassificationConstants.hasTemporalPrefix(text) {
+            let ext = (text as NSString).pathExtension.lowercased()
             if ClassificationConstants.videoExtensions.contains(ext) { return "video" }
             return "screenshot_or_photo"
         }
@@ -337,9 +350,24 @@ struct FileMetadata: Codable {
         return nil
     }
 
+    private static func detectIntent(from fileName: String, parentFolder: String) -> String? {
+        detectIntent(in: fileName, parentFolder: parentFolder, treatAsFilename: true)
+    }
+
     /// Convenience: returns true if the target string contains any of the given keywords.
     private static func matchesAny(_ target: String, _ keywords: [String]) -> Bool {
         keywords.contains { target.contains($0) }
+    }
+
+    /// Word-boundary match — avoids false positives (e.g. "prototypes" vs "contract").
+    private static func matchesAnyWord(_ target: String, _ keywords: [String]) -> Bool {
+        for keyword in keywords {
+            let pattern = "\\b\(NSRegularExpression.escapedPattern(for: keyword))\\b"
+            if target.range(of: pattern, options: .regularExpression) != nil {
+                return true
+            }
+        }
+        return false
     }
 
     // MARK: - Filename Pattern Detection

@@ -3,7 +3,7 @@
 //  File Classification System
 //
 //  Rule-based fallback classifier for when LLM classification fails.
-//  Uses deterministic rules based on file extensions and filename patterns.
+//  Uses filename intent, content preview keywords, extensions, and folder context.
 //
 
 import Foundation
@@ -21,11 +21,12 @@ class FallbackClassifier {
 
     // MARK: - Personal Domain
     //
-    // Priority chain (matches the methodology description):
+    // Priority chain:
     //   1. Project directory signal  → Projects/Apps or Projects/Experiments
     //   2. Temporal name signal      → Media/Screenshots or Media/Photos
-    //   3. Detected intent (pre-computed from filename + folder context)
-    //   4. Extension as last resort  → Media or Projects for unambiguous types only
+    //   3. Filename intent (pre-computed at extract time)
+    //   4. Content preview intent    → same taxonomy keywords, lower confidence
+    //   5. Extension                 → Media or Projects for unambiguous types only
 
     func classifyPersonalDomain(_ metadata: FileMetadata) -> ClassificationResult {
         var reasoning: [String] = []
@@ -68,10 +69,10 @@ class FallbackClassifier {
             )
         }
 
-        // --- Rule 3: Intent-based routing ---
+        // --- Rule 3: Filename intent (computed during metadata extraction) ---
         if let intent = metadata.detectedIntent {
-            reasoning.append("detected intent: \(intent)")
-            if let (category, subfolder, conf) = intentToPersonalDomain(intent) {
+            reasoning.append("filename intent: \(intent)")
+            if let (category, subfolder, conf) = intentToPersonalDomain(intent, fromPreview: false) {
                 confidence = conf
                 return ClassificationResult(
                     category: category,
@@ -83,7 +84,27 @@ class FallbackClassifier {
             }
         }
 
-        // --- Rule 4: Extension for unambiguous types (Media, code) ---
+        // --- Rule 4: Preview intent (offline scan of extracted text) ---
+        if metadata.detectedIntent == nil,
+           let preview = metadata.contentPreview?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !preview.isEmpty,
+           let previewIntent = FileMetadata.detectIntent(
+               in: preview,
+               parentFolder: metadata.parentFolder,
+               treatAsFilename: false
+           ),
+           let (category, subfolder, conf) = intentToPersonalDomain(previewIntent, fromPreview: true) {
+            reasoning.append("preview intent: \(previewIntent)")
+            return ClassificationResult(
+                category: category,
+                subfolder: subfolder,
+                confidence: conf,
+                reasoning: reasoning.joined(separator: "; "),
+                method: .fallback
+            )
+        }
+
+        // --- Rule 5: Extension for unambiguous types (Media, code) ---
         let ext = metadata.fileExtension.lowercased()
         if ClassificationConstants.imageExtensions.contains(ext) {
             return ClassificationResult(category: "Media", subfolder: "Photos", confidence: 0.85,
@@ -115,48 +136,57 @@ class FallbackClassifier {
             category: "Personal",
             subfolder: "General",
             confidence: 0.45,
-            reasoning: "no intent or extension signal; default personal",
+            reasoning: "no filename, preview, or extension signal; default personal",
             method: .fallback
         )
     }
 
-    /// Maps a pre-detected intent string to a personal domain category, subfolder, and confidence.
-    private func intentToPersonalDomain(_ intent: String) -> (category: String, subfolder: String, confidence: Double)? {
+    /// Maps an intent string to category, subfolder, and confidence.
+    /// Preview-derived intents use slightly lower confidence than filename signals.
+    private func intentToPersonalDomain(
+        _ intent: String,
+        fromPreview: Bool
+    ) -> (category: String, subfolder: String, confidence: Double)? {
+        let previewConfidenceDelta = 0.08
+        func adjusted(_ base: Double) -> Double {
+            fromPreview ? max(base - previewConfidenceDelta, 0.58) : base
+        }
+
         switch intent {
         // Career
-        case "job_prep":          return ("Career", "Job Prep",           0.92)
-        case "resume":            return ("Career", "Resumes",            0.95)
-        case "cover_letter":      return ("Career", "Cover Letters",      0.95)
-        case "performance_review":return ("Career", "Performance Reviews",0.93)
-        case "offer_letter":      return ("Career", "Work",               0.90)
-        case "payroll":           return ("Career", "Work",               0.88)
-        case "certification":     return ("Career", "Certifications",     0.90)
+        case "job_prep":          return ("Career", "Job Prep",            adjusted(0.92))
+        case "resume":            return ("Career", "Resumes",             adjusted(0.95))
+        case "cover_letter":      return ("Career", "Cover Letters",       adjusted(0.95))
+        case "performance_review":return ("Career", "Performance Reviews", adjusted(0.93))
+        case "offer_letter":      return ("Career", "Work",                adjusted(0.90))
+        case "payroll":           return ("Career", "Work",                adjusted(0.88))
+        case "certification":     return ("Career", "Certifications",      adjusted(0.90))
         // Finance
-        case "tax":               return ("Finance", "Taxes",             0.95)
-        case "bank_statement":    return ("Finance", "Bank Statements",   0.92)
-        case "invoice":           return ("Finance", "Bills",             0.90)
-        case "receipt":           return ("Finance", "Receipts",          0.90)
-        case "investment":        return ("Finance", "Investments",       0.92)
+        case "tax":               return ("Finance", "Taxes",              adjusted(0.95))
+        case "bank_statement":    return ("Finance", "Bank Statements",    adjusted(0.92))
+        case "invoice":           return ("Finance", "Bills",              adjusted(0.90))
+        case "receipt":           return ("Finance", "Receipts",           adjusted(0.90))
+        case "investment":        return ("Finance", "Investments",        adjusted(0.92))
         // Legal
-        case "immigration":       return ("Legal",   "Immigration",       0.95)
-        case "probate":           return ("Legal",   "Probate",           0.95)
-        case "court_case":        return ("Legal",   "Court Cases",       0.90)
-        case "evidence":          return ("Legal",   "Evidence",          0.88)
-        case "contract":          return ("Legal",   "Contracts",         0.85)
+        case "immigration":       return ("Legal",   "Immigration",        adjusted(0.95))
+        case "probate":           return ("Legal",   "Probate",            adjusted(0.95))
+        case "court_case":        return ("Legal",   "Court Cases",        adjusted(0.90))
+        case "evidence":          return ("Legal",   "Evidence",           adjusted(0.88))
+        case "contract":          return ("Legal",   "Contracts",          adjusted(0.85))
         // Personal
-        case "health":            return ("Personal","Health",            0.92)
-        case "insurance":         return ("Personal","Insurance",         0.92)
-        case "identity":          return ("Personal","Identity",          0.95)
-        case "rent":              return ("Personal","Rent",              0.90)
-        case "travel":            return ("Personal","General",           0.82)
+        case "health":            return ("Personal","Health",             adjusted(0.92))
+        case "insurance":         return ("Personal","Insurance",          adjusted(0.92))
+        case "identity":          return ("Personal","Identity",           adjusted(0.95))
+        case "rent":              return ("Personal","Rent",               adjusted(0.90))
+        case "travel":            return ("Personal","General",            adjusted(0.82))
         // Learning (under Career)
-        case "university":        return ("Career", "University",        0.90)
-        case "course":            return ("Career", "PM Courses",        0.88)
-        case "book":              return ("Career", "Books",             0.85)
-        case "notes":             return ("Career", "Notes",             0.85)
+        case "university":        return ("Career", "University",         adjusted(0.90))
+        case "course":            return ("Career", "PM Courses",         adjusted(0.88))
+        case "book":              return ("Career", "Books",              adjusted(0.85))
+        case "notes":             return ("Career", "Notes",              adjusted(0.85))
         // Media (temporal handled earlier, but catch-all)
-        case "screenshot_or_photo": return ("Media", "Screenshots",      0.90)
-        case "video":             return ("Media",   "Videos",            0.90)
+        case "screenshot_or_photo": return ("Media", "Screenshots",       adjusted(0.90))
+        case "video":             return ("Media",   "Videos",             adjusted(0.90))
         default:                  return nil
         }
     }

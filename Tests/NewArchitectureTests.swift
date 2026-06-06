@@ -135,6 +135,73 @@ final class NewArchitectureTests: XCTestCase {
         XCTAssertEqual(result.subfolder, "Code")
         XCTAssertEqual(result.method, ClassificationMethod.fallback)
     }
+
+    func testFallbackClassifierPreviewIntentWhenFilenameAmbiguous() {
+        let classifier = FallbackClassifier()
+        let metadata = FileMetadata.forTest(
+            fileName: "document_2024.pdf",
+            fileExtension: "pdf",
+            contentPreview: "Form 1040 U.S. Individual Income Tax Return Department of the Treasury",
+            hasTextContent: true,
+            detectedIntent: nil
+        )
+
+        let result = classifier.classify(metadata)
+
+        XCTAssertEqual(result.category, "Finance")
+        XCTAssertEqual(result.subfolder, "Taxes")
+        XCTAssertTrue(result.reasoning?.contains("preview intent") ?? false)
+        XCTAssertGreaterThanOrEqual(result.confidence, 0.58)
+        XCTAssertLessThan(result.confidence, 0.95)
+    }
+
+    func testFallbackClassifierPreviewRoutesPMTopicsToCareer() {
+        let classifier = FallbackClassifier()
+        let metadata = FileMetadata.forTest(
+            fileName: "A PMs Guide to Wireframes and Prototypes.pdf",
+            fileExtension: "pdf",
+            contentPreview: "Product management fundamentals: wireframes and prototypes for PM teams.",
+            hasTextContent: true,
+            detectedIntent: nil
+        )
+
+        let result = classifier.classify(metadata)
+
+        XCTAssertEqual(result.category, "Career")
+        XCTAssertEqual(result.subfolder, "Books")
+        XCTAssertTrue(result.reasoning?.contains("preview intent") ?? false)
+    }
+
+    func testFallbackClassifierFilenameIntentBeatsPreview() {
+        let classifier = FallbackClassifier()
+        let metadata = FileMetadata.forTest(
+            fileName: "invoice_march.pdf",
+            fileExtension: "pdf",
+            contentPreview: "This textbook chapter covers university admissions.",
+            hasTextContent: true,
+            detectedIntent: "invoice"
+        )
+
+        let result = classifier.classify(metadata)
+
+        XCTAssertEqual(result.category, "Finance")
+        XCTAssertEqual(result.subfolder, "Bills")
+        XCTAssertTrue(result.reasoning?.contains("filename intent") ?? false)
+    }
+
+    func testDetectIntentInPreviewText() {
+        XCTAssertEqual(
+            FileMetadata.detectIntent(in: "Consulate General visa appointment confirmation"),
+            "immigration"
+        )
+        XCTAssertEqual(
+            FileMetadata.detectIntent(
+                in: "Become an expert in A/B testing and split test experimentation for product teams",
+                treatAsFilename: false
+            ),
+            "book"
+        )
+    }
     
     func testFallbackClassifierDetermineCategoryFromExtension() {
         let classifier = FallbackClassifier()
@@ -150,14 +217,14 @@ final class NewArchitectureTests: XCTestCase {
     
     // MARK: - FileClassificationManager Tests
     
-    func testFileClassificationManagerWithMockLLM() async {
-        let mockLLM = MockLLMService()
-        mockLLM.mockResponse = """
+    func testFileClassificationManagerWithStubLLM() async {
+        let stub = StubLLMService.fast()
+        stub.fixedResponse = """
         {"category": "Finance", "subfolder": "Bills", "confidence": 0.95, "reasoning": "PDF file with invoice in name"}
         """
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: stub,
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -200,11 +267,8 @@ final class NewArchitectureTests: XCTestCase {
     }
     
     func testFileClassificationManagerFallbackOnLLMFailure() async {
-        let mockLLM = MockLLMService()
-        mockLLM.shouldFail = true
-        
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: FailingLLMService(),
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()
@@ -248,13 +312,13 @@ final class NewArchitectureTests: XCTestCase {
     }
     
     func testFileClassificationManagerBatch() async {
-        let mockLLM = MockLLMService()
-        mockLLM.mockResponse = """
+        let stub = StubLLMService.fast()
+        stub.fixedResponse = """
         {"category": "Personal", "subfolder": "General", "confidence": 0.9, "reasoning": "default"}
         """
         
         let manager = FileClassificationManager(
-            llmService: mockLLM,
+            llmService: stub,
             telemetryService: TelemetryService.shared,
             fallbackClassifier: FallbackClassifier(),
             promptBuilder: ClassificationPromptBuilder()

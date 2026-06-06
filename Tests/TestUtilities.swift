@@ -16,22 +16,6 @@ extension KeywordStore {
     }
 }
 
-extension MockLLMService {
-    /// Mock with no artificial network delay (for faster tests).
-    static func fast() -> MockLLMService {
-        let mock = MockLLMService()
-        mock.delay = 0
-        return mock
-    }
-
-    /// Mock that fails immediately with no artificial delay (for fast integration tests).
-    static func failingInstantly() -> MockLLMService {
-        let mock = fast()
-        mock.shouldFail = true
-        return mock
-    }
-}
-
 extension FileMetadata {
     /// Builds test metadata with personal-domain signal defaults.
     static func forTest(

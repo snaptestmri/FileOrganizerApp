@@ -3,6 +3,9 @@ import XCTest
 @testable import FileOrganizerApp
 
 /// Phase 0: shared evaluation harness (no Ollama required).
+///
+/// Most tests classify files from `EVAL_FOLDER` (or `QUICK_TUNING_FOLDER`). When unset, `~/Downloads` is used.
+/// If that folder is missing or empty, the harness falls back to built-in sample fixtures.
 final class EvaluationHarnessTests: XCTestCase {
 
     private var harness = ClassificationEvaluationHarness()
@@ -37,7 +40,7 @@ final class EvaluationHarnessTests: XCTestCase {
         }
 
         let config = EvaluationConfig.fromEnvironment()
-        XCTAssertEqual(config.folderPath, ( "~/Documents" as NSString).expandingTildeInPath)
+        XCTAssertEqual(config.folderPath, ("~/Documents" as NSString).expandingTildeInPath)
         XCTAssertEqual(config.maxFiles, 12)
         XCTAssertEqual(config.model, "mistral:7b")
         XCTAssertEqual(config.temperature, 0.15, accuracy: 0.001)
@@ -47,15 +50,31 @@ final class EvaluationHarnessTests: XCTestCase {
     }
 
     func testEvaluationConfigMakeManagerAppliesPromptSettings() {
-        var config = EvaluationConfig()
-        config.useExamples = false
-        config.promptVariant = .detailed
+        let config = EvaluationConfig.forHarnessTests { config in
+            config.useExamples = false
+            config.promptVariant = .detailed
+        }
 
-        let manager = config.makeClassificationManager(llmService: MockLLMService.fast())
+        let manager = config.makeClassificationManager(llmService: StubLLMService.fast())
         XCTAssertFalse(manager.useExamples)
     }
 
-    // MARK: - Discovery
+    func testForHarnessTestsDefaultsToDownloadsWhenEnvUnset() {
+        unsetenv("EVAL_FOLDER")
+        unsetenv("QUICK_TUNING_FOLDER")
+        defer {
+            unsetenv("EVAL_FOLDER")
+            unsetenv("QUICK_TUNING_FOLDER")
+        }
+
+        let config = EvaluationConfig.forHarnessTests()
+        XCTAssertEqual(
+            config.folderPath,
+            (EvaluationConfig.defaultFolder as NSString).expandingTildeInPath
+        )
+    }
+
+    // MARK: - Discovery (isolated — does not use EVAL_FOLDER)
 
     func testDiscoverFilesCreatesSampleFixturesWhenNoFolder() throws {
         var config = EvaluationConfig()
@@ -90,48 +109,56 @@ final class EvaluationHarnessTests: XCTestCase {
         XCTAssertEqual(fileSet.sourceDescription, dir.path)
     }
 
-    // MARK: - Evaluate
-
-    func testEvaluateWithMockLLM() async throws {
-        let dir = try makeSingleFileFixture(name: "invoice_acme_2024.pdf", content: "Invoice #4421")
+    func testDiscoverFilesUsesEvalFolderFromEnvironment() throws {
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("EvalHarness-Env-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         cleanupDirectory = dir
 
-        var config = EvaluationConfig()
-        config.folderPath = dir.path
-        config.maxFiles = 1
-        config.runLabel = "mock"
-        config.useSampleFixturesWhenEmpty = false
+        try "one".write(to: dir.appendingPathComponent("a.txt"), atomically: true, encoding: .utf8)
+        try "two".write(to: dir.appendingPathComponent("b.txt"), atomically: true, encoding: .utf8)
 
+        setenv("EVAL_FOLDER", dir.path, 1)
+        defer { unsetenv("EVAL_FOLDER") }
+
+        let config = EvaluationConfig.forHarnessTests { $0.maxFiles = 10 }
         let fileSet = try harness.discoverFiles(config: config)
-        let mock = MockLLMService.fast()
-        mock.mockResponse = """
-        {"category": "Documents", "subfolder": "Invoices", "confidence": 0.92, "reasoning": "test", "method": "llm"}
+
+        XCTAssertEqual(fileSet.urls.count, 2)
+        XCTAssertEqual(fileSet.sourceDescription, dir.path)
+        XCTAssertNil(fileSet.cleanupDirectory)
+    }
+
+    // MARK: - Evaluate (uses EVAL_FOLDER / ~/Downloads)
+
+    func testEvaluateWithStubLLM() async throws {
+        let config = EvaluationConfig.forHarnessTests { $0.runLabel = "stub-llm" }
+        let stub = StubLLMService.fast()
+        stub.fixedResponse = """
+        {"category": "Personal", "subfolder": "General", "confidence": 0.92, "reasoning": "test", "method": "llm"}
         """
+        let (report, fileSet) = try await harness.evaluateDiscoveredFiles(
+            config: config,
+            llmService: stub
+        )
+        cleanupDirectory = fileSet.cleanupDirectory
 
-        let report = await harness.evaluate(fileSet: fileSet, config: config, llmService: mock)
-
-        XCTAssertEqual(report.runLabel, "mock")
-        XCTAssertEqual(report.fileCount, 1)
-        XCTAssertEqual(report.successCount, 1)
+        XCTAssertEqual(report.runLabel, "stub-llm")
+        XCTAssertGreaterThan(report.fileCount, 0)
+        XCTAssertEqual(report.successCount, report.fileCount)
         XCTAssertGreaterThan(report.averageConfidence, 0)
         XCTAssertGreaterThan(report.averageDurationMs, 0)
-        XCTAssertEqual(report.fallbackCount, 0)
+        XCTAssertTrue(report.rows.allSatisfy { $0.method == .llm })
 
-        let row = try XCTUnwrap(report.rows.first)
-        XCTAssertEqual(row.fileName, "invoice_acme_2024.pdf")
-        XCTAssertEqual(row.method, .llm)
-        XCTAssertEqual(row.confidence, 0.92, accuracy: 0.01)
-        XCTAssertFalse(row.category.isEmpty)
-        XCTAssertFalse(row.subfolder.isEmpty)
-        // Life-domain normalization may adjust LLM category/subfolder (e.g. Documents → Personal).
+        if let folderPath = config.resolvedFolderPath(),
+           !fileSet.sourceDescription.contains("sample"),
+           !fileSet.sourceDescription.contains("empty") {
+            XCTAssertTrue(report.sourceDescription.hasPrefix(folderPath) || report.sourceDescription == folderPath)
+        }
     }
 
     func testEvaluateFallbackOnly() async throws {
-        var config = EvaluationConfig()
-        config.maxFiles = 2
-        config.runLabel = "fallback-only"
-        config.folderPath = nil
-
+        let config = EvaluationConfig.forHarnessTests { $0.runLabel = "fallback-only" }
         let fileSet = try harness.discoverFiles(config: config)
         cleanupDirectory = fileSet.cleanupDirectory
 
@@ -144,36 +171,29 @@ final class EvaluationHarnessTests: XCTestCase {
     }
 
     func testEvaluateDiscoveredFilesEndToEnd() async throws {
-        var config = EvaluationConfig()
-        config.maxFiles = 2
-        config.runLabel = "e2e-mock"
-        config.folderPath = nil
-
+        let config = EvaluationConfig.forHarnessTests { $0.runLabel = "e2e-mock" }
         let (report, fileSet) = try await harness.evaluateDiscoveredFiles(
             config: config,
-            llmService: MockLLMService.fast()
+            llmService: StubLLMService.fast()
         )
         cleanupDirectory = fileSet.cleanupDirectory
 
         XCTAssertGreaterThan(report.fileCount, 0)
         XCTAssertFalse(report.sourceDescription.isEmpty)
+        print("📁 Evaluation source: \(report.sourceDescription) (\(report.fileCount) file(s))")
     }
 
     // MARK: - Export
 
     func testExportJSONAndCSV() async throws {
-        var config = EvaluationConfig()
-        config.maxFiles = 2
-        config.runLabel = "export-test"
-        config.folderPath = nil
-
+        let config = EvaluationConfig.forHarnessTests { $0.runLabel = "export-test" }
         let fileSet = try harness.discoverFiles(config: config)
         cleanupDirectory = fileSet.cleanupDirectory
 
         let report = await harness.evaluate(
             fileSet: fileSet,
             config: config,
-            llmService: MockLLMService.fast()
+            llmService: StubLLMService.fast()
         )
 
         let json = try XCTUnwrap(report.exportJSON())
@@ -190,34 +210,33 @@ final class EvaluationHarnessTests: XCTestCase {
     }
 
     func testPrintReportDoesNotCrash() async throws {
-        var config = EvaluationConfig()
-        config.maxFiles = 1
-        config.folderPath = nil
-
+        let config = EvaluationConfig.forHarnessTests()
         let fileSet = try harness.discoverFiles(config: config)
         cleanupDirectory = fileSet.cleanupDirectory
 
         let report = await harness.evaluate(
             fileSet: fileSet,
             config: config,
-            llmService: MockLLMService.fast()
+            llmService: StubLLMService.fast()
         )
 
         var lines: [String] = []
         report.printReport { lines.append($0) }
         XCTAssertTrue(lines.contains { $0.contains("Classification Evaluation Report") })
         XCTAssertTrue(lines.contains { $0.contains("Per file:") })
+        for row in report.rows {
+            XCTAssertTrue(lines.contains { $0.contains(row.fileName) })
+        }
     }
 
     func testExpectedLabelAttachedToRow() async throws {
         let dir = try makeSingleFileFixture(name: "invoice_acme_2024.pdf", content: "Invoice")
         cleanupDirectory = dir
 
-        var config = EvaluationConfig()
-        config.folderPath = dir.path
-        config.maxFiles = 1
-        config.useSampleFixturesWhenEmpty = false
+        setenv("EVAL_FOLDER", dir.path, 1)
+        defer { unsetenv("EVAL_FOLDER") }
 
+        let config = EvaluationConfig.forHarnessTests { $0.maxFiles = 1 }
         let fileSet = try harness.discoverFiles(config: config)
         let expected: [String: ExpectedLabel] = [
             "invoice_acme_2024.pdf": ExpectedLabel(
@@ -229,17 +248,17 @@ final class EvaluationHarnessTests: XCTestCase {
         let report = await harness.evaluate(
             fileSet: fileSet,
             config: config,
-            llmService: MockLLMService.fast(),
+            llmService: StubLLMService.fast(),
             expectedByFileName: expected
         )
 
         let row = try XCTUnwrap(report.rows.first)
+        XCTAssertEqual(row.fileName, "invoice_acme_2024.pdf")
         XCTAssertEqual(row.expected?.expectedCategory, "Documents")
         XCTAssertEqual(row.expected?.expectedSubfolder, "Invoices")
     }
 
     func testOllamaAvailabilityDoesNotRequireServer() async {
-        // Smoke test: call completes (may be true or false depending on machine).
         _ = await ClassificationEvaluationHarness.isOllamaAvailable()
     }
 
